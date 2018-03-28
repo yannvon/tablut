@@ -132,3 +132,7 @@
 137,Human,Human,GAMEOVER USER CANCEL UNDECIDED,NOBODY,3,game00137.log,USER CANCEL
 138,Human,Human,GAMEOVER USER CANCEL UNDECIDED,NOBODY,31,game00138.log,USER CANCEL
 139,Human,Human,0,Human,32,game00139.log,
+3,Human,260808862,0,Human,9,game00003.log,
+4,GreedyPlayer,Human,0,GreedyPlayer,7,game00004.log,
+5,Human,GreedyPlayer,0,Human,7,game00005.log,
+6,Human,GreedyPlayer,0,Human,14,game00006.log,
