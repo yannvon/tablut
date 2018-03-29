@@ -1,6 +1,7 @@
 package student_player;
 
 import boardgame.Move;
+import student_player.MyTools.Pair;
 import tablut.TablutBoardState;
 import tablut.TablutPlayer;
 
@@ -25,10 +26,11 @@ public class StudentPlayer extends TablutPlayer {
         // You probably will make separate functions in MyTools.
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
-        MyTools.getSomething();
+        Pair bestMove = MyTools.initAlphaBetaPruning(2, boardState);
 
         // Is random the best you can do?
-        Move myMove = boardState.getRandomMove();
+        System.out.println(bestMove.getX());
+        Move myMove = bestMove.getM();
 
         // Return your move to be processed by the server.
         return myMove;
