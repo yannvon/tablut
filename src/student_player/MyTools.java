@@ -1,8 +1,6 @@
 package student_player;
 
 import java.util.List;
-import java.util.Random;
-
 import boardgame.Board;
 import boardgame.Move;
 import tablut.TablutBoardState;
@@ -15,13 +13,6 @@ public class MyTools {
 	 * 
 	 */
 	
-	public static Pair initAlphaBetaPruning(int depth, TablutBoardState bs) {
-		// Check non zero depth
-		
-		return alphaBetaPruning(depth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, bs);
-	}
-	
-	
 	/**
 	 * @param depth
 	 * @param alpha
@@ -29,11 +20,13 @@ public class MyTools {
 	 * @param bs
 	 * @return
 	 */
-	public static Pair alphaBetaPruning(int depth, double alpha, double beta, TablutBoardState bs){
+	public static Pair alphaBetaPruning(int depth, TablutBoardState bs){
         
 		if (depth <= 0 || bs.gameOver()){
 			return new Pair(Evaluation(bs), null);
 		}
+		double alpha = Double.NEGATIVE_INFINITY;
+		double beta = Double.POSITIVE_INFINITY;
 		
 		if (bs.getOpponent() == TablutBoardState.MUSCOVITE) {
 			return MaxValue(depth, alpha, beta, bs);
@@ -45,7 +38,6 @@ public class MyTools {
 	
     private static Pair MaxValue(int depth, double alpha, double beta, TablutBoardState bs) {
 		if (cutoff(depth)){
-			System.out.println("cutoff");
 			return new Pair(Evaluation(bs), null);
 		}
 
@@ -59,28 +51,22 @@ public class MyTools {
 			double score = MinValue(depth - 1, newAlpha, beta, newBS).x;
 			
 			if (score > newAlpha) {
-				System.out.println("new Alpha score: " + score);
 				newAlpha = score;
 				bestMove = m;
 			}
 			
 			// Pruning
 			if (newAlpha >= beta){
-				System.out.println("Pruning occured !");
 				return new Pair(beta, null);
 			}
-			
-			// TODO maybe remember best move -> not useful actually?
 		}
 		return new Pair(newAlpha, bestMove);
 	}
     
     private static Pair MinValue(int depth, double alpha, double beta, TablutBoardState bs) {
 		if (cutoff(depth)){
-			System.out.println("cutoff");
 			return new Pair(Evaluation(bs), null);
 		}
-
 		List<TablutMove> options = bs.getAllLegalMoves();
 
 		double newBeta = beta;
@@ -97,34 +83,33 @@ public class MyTools {
 			
 			// Pruning
 			if (alpha >= newBeta){
-				System.out.println("Pruning occured !");
 				return new Pair(alpha, null);
 			}
 		}
-
 		return new Pair(newBeta, bestMove);
 	}
 	
 	private static boolean cutoff(int d) {
 		return d <= 0;
 	}
+	
+	
 	/**
 	 * Evaluation function.
 	 * High value good for SWEDES (white).
 	 * Low value good for MUSCOVITE (black).
 	 * 
-	 * 
 	 * @param bs
-	 * @return
+	 * @return evaluated board state
 	 */
 	private static double Evaluation(TablutBoardState bs){
 		if (bs.gameOver()) {
 			if (bs.getWinner() == TablutBoardState.SWEDE){
-				return 100;				
+				return 1000;				
 			} else if (bs.getWinner() == Board.DRAW){
-				return 0; //FIXME
+				return 0;
 			} else if (bs.getWinner() == TablutBoardState.MUSCOVITE) {
-				return -100;				
+				return -1000;				
 			} else {
 				throw new Error ("unhandled case"); //FIXME
 			}
@@ -132,29 +117,29 @@ public class MyTools {
 		// Number of pieces evaluation.
 		int piecesDifference = bs.getNumberPlayerPieces(TablutBoardState.SWEDE) 
 				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE);
-		return 2 * piecesDifference;
+		return piecesDifference;
 		
 		/*
 		 * Ideas:
-		 * 	make it finish quickly
+		 * 	make it finish quickly, don't goof around ! (remove points from score -> less pruning?
 		 * 
 		 * 	total number of pawns on board, (eating is good) 
+		 * 
+		 * 	remove symmetric states
 		 */
 	}
 	
+	/**
+	 * Helper class.
+	 */
 	public static class Pair {
-		public double getX() {
+		public double getValue() {
 			return x;
 		}
-		public void setX(double x) {
-			this.x = x;
-		}
-		public Move getM() {
+		public Move getMove() {
 			return m;
 		}
-		public void setM(Move m) {
-			this.m = m;
-		}
+
 		public Pair(double x, Move m) {
 			this.x = x;
 			this.m = m;

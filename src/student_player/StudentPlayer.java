@@ -26,11 +26,11 @@ public class StudentPlayer extends TablutPlayer {
         // You probably will make separate functions in MyTools.
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
-        Pair bestMove = MyTools.initAlphaBetaPruning(2, boardState);
+        Pair bestMove = MyTools.alphaBetaPruning(4, boardState);
 
         // Is random the best you can do?
-        System.out.println(bestMove.getX());
-        Move myMove = bestMove.getM();
+        System.out.println(bestMove.getValue());
+        Move myMove = bestMove.getMove();
 
         // Return your move to be processed by the server.
         return myMove;

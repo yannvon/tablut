@@ -9,7 +9,7 @@ import java.io.IOException;
 //
 // From the root directory of the project, run
 //
-//     java -cp bin autoplay.Autoplay n_games
+//     java -cp bin autoplay.AutoplayN n_games
 //
 // Note: The script is currently set up to have the StudentPlayer play against
 // RandomHusPlayer. In order to have different players participate, you need
@@ -19,7 +19,7 @@ import java.io.IOException;
 // to test. For example to have StudentPlayer play against itself, you would
 // change ``client2_line`` to be equal to ``client1_line``.
 //
-public class Autoplay {
+public class AutoplayN {
     public static void main(String args[]) {
         int n_games;
         try {
@@ -44,9 +44,16 @@ public class Autoplay {
             client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
             ProcessBuilder client2_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
-                    "boardgame.Client", "tablut.GreedyTablutPlayer");
+                    "boardgame.Client", "tablut.RandomTablutPlayer");
             client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
+            /*
+             * Stats
+             */
+            int p1MuscWin = 0;
+            int p1SwedWin = 0;
+            int draws = 0;
+            
             for (int i = 0; i < n_games; i++) {
                 System.out.println("Game " + i);
 
