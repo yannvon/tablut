@@ -3,10 +3,16 @@ package student_player;
 import java.util.List;
 import boardgame.Board;
 import boardgame.Move;
+import coordinates.Coord;
 import tablut.TablutBoardState;
 import tablut.TablutMove;
 
 public class MyTools {
+	public double[] weights;
+	
+	public MyTools(double[] weights) {
+		this.weights = weights;
+	}
 
 	/*
 	 * MiniMax with Alpha Beta Pruning algorithm.
@@ -20,7 +26,7 @@ public class MyTools {
 	 * @param bs
 	 * @return
 	 */
-	public static Pair alphaBetaPruning(int depth, TablutBoardState bs){
+	public Pair alphaBetaPruning(int depth, TablutBoardState bs){
         
 		if (depth <= 0 || bs.gameOver()){
 			return new Pair(Evaluation(bs), null);
@@ -28,15 +34,15 @@ public class MyTools {
 		double alpha = Double.NEGATIVE_INFINITY;
 		double beta = Double.POSITIVE_INFINITY;
 		
-		if (bs.getOpponent() == TablutBoardState.MUSCOVITE) {
-			return MaxValue(depth, alpha, beta, bs);
+		if (bs.getTurnPlayer() == TablutBoardState.SWEDE) {
+			return MaxValue(depth, alpha, beta, bs);	//FIXME create different methods here that keep track of the move !!
 		} else {
 			return MinValue(depth, alpha, beta, bs);
 		}
 	}
 	
 	
-    private static Pair MaxValue(int depth, double alpha, double beta, TablutBoardState bs) {
+    private Pair MaxValue(int depth, double alpha, double beta, TablutBoardState bs) {
 		if (cutoff(depth)){
 			return new Pair(Evaluation(bs), null);
 		}
@@ -63,7 +69,7 @@ public class MyTools {
 		return new Pair(newAlpha, bestMove);
 	}
     
-    private static Pair MinValue(int depth, double alpha, double beta, TablutBoardState bs) {
+    private Pair MinValue(int depth, double alpha, double beta, TablutBoardState bs) {
 		if (cutoff(depth)){
 			return new Pair(Evaluation(bs), null);
 		}
@@ -89,7 +95,7 @@ public class MyTools {
 		return new Pair(newBeta, bestMove);
 	}
 	
-	private static boolean cutoff(int d) {
+	private boolean cutoff(int d) {
 		return d <= 0;
 	}
 	
@@ -102,7 +108,9 @@ public class MyTools {
 	 * @param bs
 	 * @return evaluated board state
 	 */
-	private static double Evaluation(TablutBoardState bs){
+	private double Evaluation(TablutBoardState bs){
+		double value = 0;
+		
 		if (bs.gameOver()) {
 			if (bs.getWinner() == TablutBoardState.SWEDE){
 				return 1000;				
@@ -114,10 +122,31 @@ public class MyTools {
 				throw new Error ("unhandled case"); //FIXME
 			}
 		}
-		// Number of pieces evaluation.
+		
+		// HEURISTIC 1: Number of pieces difference.
 		int piecesDifference = bs.getNumberPlayerPieces(TablutBoardState.SWEDE) 
 				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE);
-		return piecesDifference;
+		value += weights[0] * piecesDifference;
+
+		
+		// HEURISTIC 2: King Mobility.
+		if (weights[1] != 0){
+			int mobilityKing = bs.getLegalMovesForPosition(bs.getKingPosition()).size();
+			value += weights[1]* mobilityKing;
+		}
+		
+		// HEURISTIC 3: General Mobility
+		int count = 0;
+		int mult = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? 1 : -1;
+		for (Coord c : bs.getPlayerPieceCoordinates()) {
+			count += mult * bs.getLegalMovesForPosition(c).size();
+		}
+		for (Coord c : bs.getOpponentPieceCoordinates()) {
+			count -= mult * bs.getLegalMovesForPosition(c).size();
+		}
+		value += weights[2] * count;
+		
+		return value;
 		
 		/*
 		 * Ideas:
