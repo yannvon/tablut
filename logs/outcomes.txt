@@ -375,3 +375,101 @@
 250,260808862,HeuristicPlayer: 1, 0.3,1,HeuristicPlayer: 1, 0.3,23,game00250.log,
 251,HeuristicPlayer: 1, 0.3,260808862,GAMEOVER DRAW,NOBODY,51,game00251.log,
 252,260808862,HeuristicPlayer: 1, 0.3,1,HeuristicPlayer: 1, 0.3,23,game00252.log,
+253,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00253.log,
+254,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00254.log,
+255,260808862,HeuristicPlayer,1,HeuristicPlayer,51,game00255.log,
+256,HeuristicPlayer,260808862,1,260808862,19,game00256.log,
+257,260808862,HeuristicPlayer,1,HeuristicPlayer,22,game00257.log,
+258,HeuristicPlayer,260808862,1,260808862,19,game00258.log,
+259,260808862,HeuristicPlayer,1,HeuristicPlayer,22,game00259.log,
+260,HeuristicPlayer,260808862,1,260808862,19,game00260.log,
+261,260808862,HeuristicPlayer,1,HeuristicPlayer,22,game00261.log,
+262,HeuristicPlayer,260808862,1,260808862,19,game00262.log,
+263,260808862,HeuristicPlayer,1,HeuristicPlayer,22,game00263.log,
+264,HeuristicPlayer,260808862,1,260808862,19,game00264.log,
+265,260808862,HeuristicPlayer,1,HeuristicPlayer,22,game00265.log,
+266,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00266.log,
+267,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00267.log,
+268,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00268.log,
+269,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00269.log,
+270,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00270.log,
+271,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00271.log,
+272,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00272.log,
+273,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00273.log,
+274,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00274.log,
+275,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00275.log,
+276,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00276.log,
+277,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00277.log,
+278,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00278.log,
+279,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00279.log,
+280,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00280.log,
+281,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00281.log,
+282,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00282.log,
+283,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00283.log,
+284,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00284.log,
+285,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00285.log,
+286,HeuristicPlayer,260808862,0,HeuristicPlayer,19,game00286.log,
+287,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00287.log,
+288,HeuristicPlayer,260808862,0,HeuristicPlayer,19,game00288.log,
+289,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00289.log,
+290,HeuristicPlayer,260808862,0,HeuristicPlayer,19,game00290.log,
+291,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00291.log,
+292,HeuristicPlayer,260808862,0,HeuristicPlayer,19,game00292.log,
+293,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00293.log,
+294,HeuristicPlayer,260808862,0,HeuristicPlayer,19,game00294.log,
+295,260808862,HeuristicPlayer,1,HeuristicPlayer,23,game00295.log,
+296,HeuristicPlayer,260808862,1,260808862,30,game00296.log,
+297,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00297.log,
+298,HeuristicPlayer,260808862,1,260808862,51,game00298.log,
+299,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00299.log,
+300,HeuristicPlayer,260808862,1,260808862,28,game00300.log,TIMEOUT
+301,HeuristicPlayer,260808862,0,HeuristicPlayer,1,game00301.log,TIMEOUT
+302,HeuristicPlayer,260808862,0,HeuristicPlayer,17,game00302.log,
+303,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00303.log,
+304,HeuristicPlayer,260808862,1,260808862,51,game00304.log,
+305,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00305.log,
+306,HeuristicPlayer,260808862,1,260808862,34,game00306.log,
+307,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00307.log,
+308,HeuristicPlayer,260808862,1,260808862,34,game00308.log,
+309,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00309.log,
+310,HeuristicPlayer,260808862,1,260808862,30,game00310.log,
+311,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00311.log,
+312,HeuristicPlayer,260808862,0,HeuristicPlayer,14,game00312.log,TIMEOUT
+313,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00313.log,
+314,HeuristicPlayer,260808862,1,260808862,34,game00314.log,
+315,260808862,HeuristicPlayer,GAMEOVER DRAW,NOBODY,51,game00315.log,
+316,HeuristicPlayer,260808862,1,260808862,17,game00316.log,
+317,260808862,HeuristicPlayer,0,260808862,50,game00317.log,
+318,HeuristicPlayer,260808862,0,HeuristicPlayer,1,game00318.log,TIMEOUT
+319,260808862,HeuristicPlayer,0,260808862,50,game00319.log,
+320,HeuristicPlayer,260808862,1,260808862,17,game00320.log,
+321,260808862,HeuristicPlayer,0,260808862,50,game00321.log,
+322,HeuristicPlayer,260808862,0,HeuristicPlayer,1,game00322.log,TIMEOUT
+323,260808862,HeuristicPlayer,0,260808862,50,game00323.log,
+324,HeuristicPlayer,260808862,0,HeuristicPlayer,1,game00324.log,TIMEOUT
+325,260808862,HeuristicPlayer,0,260808862,50,game00325.log,
+326,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00326.log,
+327,260808862,HeuristicPlayer,1,HeuristicPlayer,6,game00327.log,TIMEOUT
+328,HeuristicPlayer,260808862,0,HeuristicPlayer,1,game00328.log,TIMEOUT
+329,260808862,HeuristicPlayer,1,HeuristicPlayer,6,game00329.log,TIMEOUT
+330,HeuristicPlayer,260808862,0,HeuristicPlayer,1,game00330.log,TIMEOUT
+331,260808862,HeuristicPlayer,1,HeuristicPlayer,6,game00331.log,TIMEOUT
+332,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00332.log,
+333,260808862,HeuristicPlayer,1,HeuristicPlayer,6,game00333.log,TIMEOUT
+334,HeuristicPlayer,260808862,0,HeuristicPlayer,1,game00334.log,TIMEOUT
+335,260808862,HeuristicPlayer,1,HeuristicPlayer,6,game00335.log,TIMEOUT
+336,HeuristicPlayer,260808862,0,HeuristicPlayer,1,game00336.log,TIMEOUT
+337,260808862,HeuristicPlayer,1,HeuristicPlayer,6,game00337.log,TIMEOUT
+339,HeuristicPlayer,260808862,1,260808862,1,game00339.log,TIMEOUT
+340,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00340.log,
+342,HeuristicPlayer,260808862,1,260808862,6,game00342.log,TIMEOUT
+343,260808862,HeuristicPlayer,0,260808862,17,game00343.log,
+344,HeuristicPlayer,260808862,1,260808862,6,game00344.log,TIMEOUT
+345,260808862,HeuristicPlayer,0,260808862,4,game00345.log,TIMEOUT
+346,HeuristicPlayer,260808862,1,260808862,6,game00346.log,TIMEOUT
+347,GreedyPlayer,HeuristicPlayer,0,GreedyPlayer,1,game00347.log,TIMEOUT
+348,GreedyPlayer,HeuristicPlayer,1,HeuristicPlayer,10,game00348.log,
+349,HeuristicPlayer,260808862,GAMEOVER DRAW,NOBODY,51,game00349.log,
+350,HeuristicPlayer,GreedyPlayer,0,HeuristicPlayer,10,game00350.log,
+351,GreedyPlayer,HeuristicPlayer,1,HeuristicPlayer,12,game00351.log,
+352,HeuristicPlayer,HeuristicPlayer,0,HeuristicPlayer,14,game00352.log,

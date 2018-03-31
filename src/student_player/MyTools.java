@@ -1,9 +1,13 @@
 package student_player;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.TimerTask;
+
 import boardgame.Board;
 import boardgame.Move;
 import coordinates.Coord;
+import coordinates.Coordinates;
 import tablut.TablutBoardState;
 import tablut.TablutMove;
 
@@ -28,22 +32,65 @@ public class MyTools {
 	 */
 	public Pair alphaBetaPruning(int depth, TablutBoardState bs){
         
-		if (depth <= 0 || bs.gameOver()){
+		if (cutoff(depth, bs)){
 			return new Pair(Evaluation(bs), null);
 		}
 		double alpha = Double.NEGATIVE_INFINITY;
 		double beta = Double.POSITIVE_INFINITY;
 		
+		long startTime = System.nanoTime();
+		
 		if (bs.getTurnPlayer() == TablutBoardState.SWEDE) {
-			return MaxValue(depth, alpha, beta, bs);	//FIXME create different methods here that keep track of the move !!
+			// -- re-implement a slight different version of Max Value
+			List<TablutMove> options = bs.getAllLegalMoves();
+
+			double newAlpha = alpha;
+			Move bestMove = null;
+			for (TablutMove m : options){
+				TablutBoardState newBS = (TablutBoardState) bs.clone();
+				newBS.processMove(m);
+				double score = MinValue(depth - 1, newAlpha, beta, newBS).x;
+				
+				if (score > newAlpha) {
+					newAlpha = score;
+					bestMove = m;
+				}
+
+				// Handle time management, return best so far
+				if (System.nanoTime() - startTime > 1800000000){
+					System.out.println("Suboptimal: not enough time left");
+					return new Pair(newAlpha, bestMove);
+				}
+			}
+			return new Pair(newAlpha, bestMove);
 		} else {
-			return MinValue(depth, alpha, beta, bs);
+			// -- re-implement a slight different version of Min Value
+			List<TablutMove> options = bs.getAllLegalMoves();
+
+			double newBeta = beta;
+			Move bestMove = null;
+			for (TablutMove m : options){
+				TablutBoardState newBS = (TablutBoardState) bs.clone();
+				newBS.processMove(m);
+				
+				double score = MaxValue(depth - 1, alpha, newBeta, newBS).x;
+				if (score < newBeta){
+					newBeta = score;
+					bestMove = m;
+				}
+				// Handle time management, return best so far
+				if (System.nanoTime() - startTime > 1800000000){
+					System.out.println("Suboptimal: not enough time left");
+					return new Pair(newBeta, bestMove);
+				}
+			}
+			return new Pair(newBeta, bestMove);
 		}
 	}
 	
 	
     private Pair MaxValue(int depth, double alpha, double beta, TablutBoardState bs) {
-		if (cutoff(depth)){
+		if (cutoff(depth, bs)){
 			return new Pair(Evaluation(bs), null);
 		}
 
@@ -70,7 +117,7 @@ public class MyTools {
 	}
     
     private Pair MinValue(int depth, double alpha, double beta, TablutBoardState bs) {
-		if (cutoff(depth)){
+		if (cutoff(depth, bs)){
 			return new Pair(Evaluation(bs), null);
 		}
 		List<TablutMove> options = bs.getAllLegalMoves();
@@ -95,8 +142,8 @@ public class MyTools {
 		return new Pair(newBeta, bestMove);
 	}
 	
-	private boolean cutoff(int d) {
-		return d <= 0;
+	private boolean cutoff(int d, TablutBoardState bs) {
+		return d <= 0 || bs.gameOver();
 	}
 	
 	
@@ -111,7 +158,7 @@ public class MyTools {
 	private double Evaluation(TablutBoardState bs){
 		double value = 0;
 		
-		if (bs.gameOver()) {
+		if (bs.gameOver() ) {	//FIXME does not realize it will be over
 			if (bs.getWinner() == TablutBoardState.SWEDE){
 				return 1000;				
 			} else if (bs.getWinner() == Board.DRAW){
@@ -137,14 +184,27 @@ public class MyTools {
 		
 		// HEURISTIC 3: General Mobility
 		int count = 0;
-		int mult = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? 1 : -1;
-		for (Coord c : bs.getPlayerPieceCoordinates()) {
-			count += mult * bs.getLegalMovesForPosition(c).size();
+		if (weights[2] != 0){	// this line avoids unnecessary computations
+			int mult = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? 1 : -1;
+			for (Coord c : bs.getPlayerPieceCoordinates()) {
+				count += mult * bs.getLegalMovesForPosition(c).size();
+			}
+			for (Coord c : bs.getOpponentPieceCoordinates()) {
+				count -= mult * bs.getLegalMovesForPosition(c).size();
+			}
+			value += weights[2] * count;			
 		}
-		for (Coord c : bs.getOpponentPieceCoordinates()) {
-			count -= mult * bs.getLegalMovesForPosition(c).size();
+		
+		// HEURISTIC 4: black pawns near corners
+		count = 0;
+		if (weights[3] != 0){	// this line avoids unnecessary computations
+			HashSet<Coord> pieces = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? bs.getOpponentPieceCoordinates() : bs.getPlayerPieceCoordinates();
+			
+			for(Coord p : pieces){
+				count += Coordinates.distanceToClosestCorner(p);
+			}
 		}
-		value += weights[2] * count;
+		value += weights[3] * count;
 		
 		return value;
 		

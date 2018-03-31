@@ -59,7 +59,7 @@ public class StudentPlayer extends TablutPlayer {
 	
 	
     private Pair MaxValue(int depth, double alpha, double beta, TablutBoardState bs) {
-		if (cutoff(depth)){
+		if (cutoff(depth, bs)){
 			return new Pair(Evaluation(bs), null);
 		}
 
@@ -86,7 +86,7 @@ public class StudentPlayer extends TablutPlayer {
 	}
     
     private Pair MinValue(int depth, double alpha, double beta, TablutBoardState bs) {
-		if (cutoff(depth)){
+		if (cutoff(depth, bs)){
 			return new Pair(Evaluation(bs), null);
 		}
 		List<TablutMove> options = bs.getAllLegalMoves();
@@ -111,8 +111,8 @@ public class StudentPlayer extends TablutPlayer {
 		return new Pair(newBeta, bestMove);
 	}
 	
-	private boolean cutoff(int d) {
-		return d <= 0;
+	private boolean cutoff(int d, TablutBoardState bs) {
+		return d <= 0 || bs.gameOver();
 	}
 	
 	

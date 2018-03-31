@@ -15,7 +15,7 @@ public class HeuristicPlayer extends TablutPlayer {
      * associate you with your agent. The constructor should do nothing else.
      */
     public HeuristicPlayer() {
-        super("HeuristicPlayer: 1, 0.3");
+        super("HeuristicPlayer");
     }
 
     /**
@@ -28,11 +28,11 @@ public class HeuristicPlayer extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	if(tools == null){
-    		double[] weights = {1, 0.3, 0.4};
+    		double[] weights = {1, 0.3, 0, 0};
     		tools = new MyTools(weights);
     	}
     	
-        Pair bestMove = tools.alphaBetaPruning(3, boardState);
+        Pair bestMove = tools.alphaBetaPruning(4, boardState);
 
         // Is random the best you can do?
         System.out.println(bestMove.getValue());
