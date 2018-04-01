@@ -6,7 +6,7 @@ import tablut.TablutBoardState;
 import tablut.TablutPlayer;
 
 /** A player file submitted by a student. */
-public class HeuristicPlayer extends TablutPlayer {
+public class LearningPlayer1 extends TablutPlayer {
 	private MyTools tools;
 	
     /**
@@ -14,8 +14,8 @@ public class HeuristicPlayer extends TablutPlayer {
      * important, because this is what the code that runs the competition uses to
      * associate you with your agent. The constructor should do nothing else.
      */
-    public HeuristicPlayer() {
-        super("HeuristicPlayer");
+    public LearningPlayer1() {
+        super("Player1");
     }
 
     /**
@@ -28,11 +28,12 @@ public class HeuristicPlayer extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	if(tools == null){
-    		double[] weights = {1, 0.3, 0, 0};
+    		double[] weights = {10, 1, 1, 0};
     		tools = new MyTools(weights);
     	}
     	
-        Pair bestMove = tools.alphaBetaPruning(4, boardState);
+    	//FIXME put depth as weight?
+        Pair bestMove = tools.alphaBetaPruning(2, boardState);
 
         // Is random the best you can do?
         System.out.println(bestMove.getValue());

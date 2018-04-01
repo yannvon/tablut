@@ -13,6 +13,7 @@ import tablut.TablutMove;
 
 public class MyTools {
 	public double[] weights;
+	public static final long MAX_TIME = 1800000000;
 	
 	public MyTools(double[] weights) {
 		this.weights = weights;
@@ -30,9 +31,9 @@ public class MyTools {
 	 * @param bs
 	 * @return
 	 */
-	public Pair alphaBetaPruning(int depth, TablutBoardState bs){
+	public Pair alphaBetaPruning(int maxDepth, TablutBoardState bs){
         
-		if (cutoff(depth, bs)){
+		if (cutoff(maxDepth, bs)){
 			return new Pair(Evaluation(bs), null);
 		}
 		double alpha = Double.NEGATIVE_INFINITY;
@@ -46,22 +47,28 @@ public class MyTools {
 
 			double newAlpha = alpha;
 			Move bestMove = null;
-			for (TablutMove m : options){
-				TablutBoardState newBS = (TablutBoardState) bs.clone();
-				newBS.processMove(m);
-				double score = MinValue(depth - 1, newAlpha, beta, newBS).x;
+			
+			// Iterate over depths (just like iterative deepening)
+			for (int d = 3; d < 10; d++) {
+				for (TablutMove m : options){
+					TablutBoardState newBS = (TablutBoardState) bs.clone();
+					newBS.processMove(m);
+					double score = MinValue(d - 1, newAlpha, beta, newBS);
+					
+					if (score > newAlpha) {
+						newAlpha = score;
+						bestMove = m;
+					}
+					
+					// Handle time management, return best so far
+					if (System.nanoTime() - startTime > MAX_TIME){
+						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
+						return new Pair(newAlpha, bestMove);
+					}
+				}
 				
-				if (score > newAlpha) {
-					newAlpha = score;
-					bestMove = m;
-				}
-
-				// Handle time management, return best so far
-				if (System.nanoTime() - startTime > 1800000000){
-					System.out.println("Suboptimal: not enough time left");
-					return new Pair(newAlpha, bestMove);
-				}
 			}
+			
 			return new Pair(newAlpha, bestMove);
 		} else {
 			// -- re-implement a slight different version of Min Value
@@ -69,29 +76,33 @@ public class MyTools {
 
 			double newBeta = beta;
 			Move bestMove = null;
-			for (TablutMove m : options){
-				TablutBoardState newBS = (TablutBoardState) bs.clone();
-				newBS.processMove(m);
-				
-				double score = MaxValue(depth - 1, alpha, newBeta, newBS).x;
-				if (score < newBeta){
-					newBeta = score;
-					bestMove = m;
-				}
-				// Handle time management, return best so far
-				if (System.nanoTime() - startTime > 1800000000){
-					System.out.println("Suboptimal: not enough time left");
-					return new Pair(newBeta, bestMove);
-				}
+			
+			for (int d = 3; d < maxDepth; d++) {
+				for (TablutMove m : options){
+					TablutBoardState newBS = (TablutBoardState) bs.clone();
+					newBS.processMove(m);
+					
+					double score = MaxValue(d - 1, alpha, newBeta, newBS);
+					if (score < newBeta){
+						newBeta = score;
+						bestMove = m;
+					}
+					// Handle time management, return best so far
+					if (System.nanoTime() - startTime > MAX_TIME){
+						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
+						return new Pair(newBeta, bestMove);
+					}
+				}				
 			}
+			
 			return new Pair(newBeta, bestMove);
 		}
 	}
 	
 	
-    private Pair MaxValue(int depth, double alpha, double beta, TablutBoardState bs) {
+    private double MaxValue(int depth, double alpha, double beta, TablutBoardState bs) {
 		if (cutoff(depth, bs)){
-			return new Pair(Evaluation(bs), null);
+			return Evaluation(bs);
 		}
 
 		List<TablutMove> options = bs.getAllLegalMoves();
@@ -101,7 +112,7 @@ public class MyTools {
 		for (TablutMove m : options){
 			TablutBoardState newBS = (TablutBoardState) bs.clone();
 			newBS.processMove(m);
-			double score = MinValue(depth - 1, newAlpha, beta, newBS).x;
+			double score = MinValue(depth - 1, newAlpha, beta, newBS);
 			
 			if (score > newAlpha) {
 				newAlpha = score;
@@ -110,15 +121,15 @@ public class MyTools {
 			
 			// Pruning
 			if (newAlpha >= beta){
-				return new Pair(beta, null);
+				return beta;
 			}
 		}
-		return new Pair(newAlpha, bestMove);
+		return newAlpha;
 	}
     
-    private Pair MinValue(int depth, double alpha, double beta, TablutBoardState bs) {
+    private double MinValue(int depth, double alpha, double beta, TablutBoardState bs) {
 		if (cutoff(depth, bs)){
-			return new Pair(Evaluation(bs), null);
+			return Evaluation(bs);
 		}
 		List<TablutMove> options = bs.getAllLegalMoves();
 
@@ -128,7 +139,7 @@ public class MyTools {
 			TablutBoardState newBS = (TablutBoardState) bs.clone();
 			newBS.processMove(m);
 			
-			double score = MaxValue(depth - 1, alpha, newBeta, newBS).x;
+			double score = MaxValue(depth - 1, alpha, newBeta, newBS);
 			if (score < newBeta){
 				newBeta = score;
 				bestMove = m;
@@ -136,10 +147,10 @@ public class MyTools {
 			
 			// Pruning
 			if (alpha >= newBeta){
-				return new Pair(alpha, null);
+				return alpha;
 			}
 		}
-		return new Pair(newBeta, bestMove);
+		return newBeta;
 	}
 	
 	private boolean cutoff(int d, TablutBoardState bs) {
