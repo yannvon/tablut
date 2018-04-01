@@ -200,15 +200,22 @@ public class MyTools {
 	private double Evaluation(TablutBoardState bs){
 		double value = 0;
 		
-		if (bs.gameOver() ) {	//FIXME does not realize it will be over
+		if (bs.gameOver() ) {
+			/*
+			 * Assign very large positive and negative numbers for loosing/winning.
+			 * Take away turn number to make it terminate more quickly.
+			 * 
+			 * FIXME how does removing this turn-number impact performance?
+			 * Should I take it away for tournament?
+			 * I guess its not too important, since it only comes into play
+			 * when the player is in a very favorable position.
+			 */
 			if (bs.getWinner() == TablutBoardState.SWEDE){
-				return 1000;				
+				return 10000 - bs.getTurnNumber(); // Trick to make it finish as quickly as possible.		
 			} else if (bs.getWinner() == Board.DRAW){
 				return 0;
 			} else if (bs.getWinner() == TablutBoardState.MUSCOVITE) {
-				return -1000;				
-			} else {
-				throw new Error ("unhandled case"); //FIXME
+				return -10000 + bs.getTurnNumber();
 			}
 		}
 		
@@ -221,7 +228,7 @@ public class MyTools {
 		// HEURISTIC 2: King Mobility.
 		if (weights[1] != 0){
 			int mobilityKing = bs.getLegalMovesForPosition(bs.getKingPosition()).size();
-			value += weights[1]* mobilityKing;
+			value += weights[1] * mobilityKing;
 		}
 		
 		// HEURISTIC 3: General Mobility
@@ -245,8 +252,8 @@ public class MyTools {
 			for(Coord p : pieces){
 				count += Coordinates.distanceToClosestCorner(p);
 			}
+			value += weights[3] * count;
 		}
-		value += weights[3] * count;
 		
 		return value;
 		
@@ -257,6 +264,8 @@ public class MyTools {
 		 * 	total number of pawns on board, (eating is good) 
 		 * 
 		 * 	remove symmetric states
+		 * 
+		 * genetic algorithm
 		 */
 	}
 	

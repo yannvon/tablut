@@ -28,7 +28,7 @@ public class LearningPlayer1 extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	if(tools == null){
-    		double[] weights = {10, 1, 1, 0};
+    		double[] weights = {3, 2, 1, 0};
     		tools = new MyTools(weights);
     	}
     	
