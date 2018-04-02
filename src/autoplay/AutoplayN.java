@@ -50,7 +50,6 @@ public class AutoplayN {
             client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             
             
-            
             /*
              * Stats
              */

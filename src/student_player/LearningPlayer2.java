@@ -28,12 +28,14 @@ public class LearningPlayer2 extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	if(tools == null){
-    		double[] weights = {1, 0.3, 0, 0};
+    		//double[] weights = {1, 0.3, 0, 0};
+    		double[] weights = {1, 1, 0, 0};
+
     		tools = new MyTools(weights);
     	}
     	
     	//FIXME put depth as weight?
-        Pair bestMove = tools.alphaBetaPruning(10, boardState);
+        Pair bestMove = tools.alphaBetaPruning(3, boardState);
         
         // Is random the best you can do?
         System.out.println(bestMove.getValue());

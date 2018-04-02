@@ -48,6 +48,7 @@ public class MyTools {
 		timer.schedule(timeoutTask, MAX_TIME);		
         
 		if (cutoff(maxDepth, bs)){
+			timer.cancel();
 			return new Pair(Evaluation(bs), null);
 		}
 		
@@ -78,6 +79,7 @@ public class MyTools {
 					 */
 					if (timeOver){
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
+						timer.cancel();
 						return new Pair(newAlpha, bestMove);
 					}
 					
@@ -92,7 +94,8 @@ public class MyTools {
 					}
 				}
 			}
-			
+			// Crucial to cancel timer, if it hasn't ended yet.
+			timer.cancel();
 			return new Pair(newAlpha, bestMove);
 		} else {
 			// -- re-implement a slight different version of Min Value
@@ -115,6 +118,7 @@ public class MyTools {
 					 */
 					if (timeOver){
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
+						timer.cancel();
 						return new Pair(newBeta, bestMove);
 					}
 					
@@ -129,7 +133,8 @@ public class MyTools {
 					}
 				}				
 			}
-			
+			// Crucial to cancel timer, if it hasn't ended yet.
+			timer.cancel();
 			return new Pair(newBeta, bestMove);
 		}
 	}
