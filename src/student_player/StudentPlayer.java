@@ -32,7 +32,7 @@ public class StudentPlayer extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	
-        Pair bestMove = alphaBetaPruning(3, boardState);
+        Pair bestMove = alphaBetaPruning(4, boardState);
 
         // Is random the best you can do?
         System.out.println(bestMove.getValue());

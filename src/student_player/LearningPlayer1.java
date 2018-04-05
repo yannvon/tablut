@@ -8,6 +8,7 @@ import tablut.TablutPlayer;
 /** A player file submitted by a student. */
 public class LearningPlayer1 extends TablutPlayer {
 	private MyTools tools;
+	private static int countCalls = 0;
 	
     /**
      * You must modify this constructor to return your student number. This is
@@ -32,8 +33,10 @@ public class LearningPlayer1 extends TablutPlayer {
     		tools = new MyTools(weights);
     	}
     	
+    	countCalls++;
+    	System.out.println("Call number: " + countCalls);
     	//FIXME put depth as weight?
-        Pair bestMove = tools.alphaBetaPruning(5, boardState);
+        Pair bestMove = tools.alphaBetaPruning(10, boardState);
 
         // Is random the best you can do?
         System.out.println(bestMove.getValue());

@@ -44,7 +44,7 @@ public class AutoplayN {
             client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
             ProcessBuilder client2_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
-                    "boardgame.Client", "student_player.PlayerN");
+                    "boardgame.Client", "tablut.GreedyTablutPlayer");
             client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             
             
