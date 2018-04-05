@@ -36,8 +36,9 @@ public class LearningPlayer1 extends TablutPlayer {
     	countCalls++;
     	System.out.println("Call number: " + countCalls);
     	//FIXME put depth as weight?
-        Pair bestMove = tools.alphaBetaPruning(10, boardState);
-
+        Pair bestMove = tools.alphaBetaPruning(3, boardState);
+        
+        System.out.println("Returned form alpha beta pruning");
         // Is random the best you can do?
         System.out.println(bestMove.getValue());
         Move myMove = bestMove.getMove();

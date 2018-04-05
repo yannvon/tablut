@@ -2,8 +2,6 @@ package student_player;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import boardgame.Board;
 import boardgame.Move;
@@ -19,16 +17,19 @@ public class MyTools {
 	public double[] weights;
 	public static final long MAX_TIME = 1900;
 
-	private boolean timeOver = false;
-
-	public MyTools(double[] weights) {
-		this.weights = weights;
-	}
 
 	/*
 	 * MiniMax with Alpha Beta Pruning algorithm.
 	 * 
 	 */
+
+	public MyTools(double[] weights) {
+		this.weights = weights;
+	}
+
+//	public boolean isTimeOver(long startTime) {
+//		return System.currentTimeMillis() - startTime > MAX_TIME;
+//	}
 
 	/**
 	 * @param depth
@@ -38,22 +39,13 @@ public class MyTools {
 	 * @return
 	 */
 	public Pair alphaBetaPruning(int maxDepth, TablutBoardState bs) {
-		timeOver = false;
-		Timer timer = new Timer();
-		TimerTask timeoutTask = new TimerTask() {
-			public void run() {
-				System.out.println("Timer goes off !");
-				timeOver = true;
-			}
-		};
-		timer.schedule(timeoutTask, MAX_TIME);
+		
+		long startTime = System.currentTimeMillis();
 
-		if (cutoff(maxDepth, bs)) {
-			timer.cancel();
+		if (cutoff(maxDepth, bs, startTime)) {
+			System.out.println("wtf");
 			return new Pair(Evaluation(bs), null);
 		}
-
-		long startTime = System.nanoTime();
 
 		if (bs.getTurnPlayer() == TablutBoardState.SWEDE) {
 
@@ -76,17 +68,16 @@ public class MyTools {
 				for (TablutMove m : options) {
 					TablutBoardState newBS = (TablutBoardState) bs.clone();
 					newBS.processMove(m);
-					double score = MinValue(d - 1, newAlpha, INIT_BETA, newBS);
+					double score = MinValue(startTime, d - 1, newAlpha, INIT_BETA, newBS);
 
 					/*
 					 * Handle time management, return best so far. Note that the
 					 * last possible move is not taken into consideration, as it
 					 * might be incorrect due to early stopping of calculations.
 					 */
-					if (timeOver) {
+					if (System.currentTimeMillis() - startTime > MAX_TIME) {
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = "
 								+ (System.nanoTime() - startTime));
-						timer.cancel();
 						return new Pair(bestAlpha, bestMove);
 					}
 
@@ -108,9 +99,8 @@ public class MyTools {
 				}
 			}
 			// Crucial to cancel timer, if it hasn't ended yet.
-			timer.cancel();
 			return new Pair(bestAlpha, bestMove);
-			
+
 		} else {
 			// -- re-implement a slight different version of Min Value
 			List<TablutMove> options = bs.getAllLegalMoves();
@@ -119,6 +109,11 @@ public class MyTools {
 
 			for (int d = 3; d <= maxDepth; d++) {
 				System.out.println("Start first step, depth = " + d);
+				
+				if (System.currentTimeMillis() - startTime > MAX_TIME) {
+					System.out.println("Abort at top level");
+					return new Pair(bestBeta, bestMove);
+				}
 
 				/*
 				 * Start a new iteration of alpha-beta pruning. Reset beta
@@ -127,22 +122,21 @@ public class MyTools {
 				 * FIXME should I ? or does it mean too much pruning?
 				 */
 				double newBeta = INIT_BETA;
-
+				
 				for (TablutMove m : options) {
 					TablutBoardState newBS = (TablutBoardState) bs.clone();
 					newBS.processMove(m);
 
-					double score = MaxValue(d - 1, INIT_ALPHA, newBeta, newBS);
+					double score = MaxValue(startTime, d - 1, INIT_ALPHA, newBeta, newBS);
 
 					/*
 					 * Handle time management, return best so far. Note that the
 					 * last possible move is not taken into consideration, as it
 					 * might be incorrect due to early stopping of calculations.
 					 */
-					if (timeOver) {
+					if (System.currentTimeMillis() - startTime > MAX_TIME) {
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = "
 								+ (System.nanoTime() - startTime));
-						timer.cancel();
 						return new Pair(bestBeta, bestMove);
 					}
 
@@ -164,13 +158,13 @@ public class MyTools {
 				}
 			}
 			// Crucial to cancel timer, if it hasn't ended yet.
-			timer.cancel();
+			System.out.println("Quitting because done");
 			return new Pair(bestBeta, bestMove);
 		}
 	}
 
-	private double MaxValue(int depth, double alpha, double beta, TablutBoardState bs) {
-		if (cutoff(depth, bs)) {
+	private double MaxValue(long startTime, int depth, double alpha, double beta, TablutBoardState bs) {
+		if (cutoff(depth, bs, startTime)) {
 			return Evaluation(bs);
 		}
 
@@ -180,7 +174,7 @@ public class MyTools {
 		for (TablutMove m : options) {
 			TablutBoardState newBS = (TablutBoardState) bs.clone();
 			newBS.processMove(m);
-			double score = MinValue(depth - 1, newAlpha, beta, newBS);
+			double score = MinValue(startTime, depth - 1, newAlpha, beta, newBS);
 
 			if (score > newAlpha) {
 				newAlpha = score;
@@ -194,8 +188,8 @@ public class MyTools {
 		return newAlpha;
 	}
 
-	private double MinValue(int depth, double alpha, double beta, TablutBoardState bs) {
-		if (cutoff(depth, bs)) {
+	private double MinValue(long startTime, int depth, double alpha, double beta, TablutBoardState bs) {
+		if (cutoff(depth, bs, startTime)) {
 			return Evaluation(bs);
 		}
 		List<TablutMove> options = bs.getAllLegalMoves();
@@ -205,7 +199,7 @@ public class MyTools {
 			TablutBoardState newBS = (TablutBoardState) bs.clone();
 			newBS.processMove(m);
 
-			double score = MaxValue(depth - 1, alpha, newBeta, newBS);
+			double score = MaxValue(startTime, depth - 1, alpha, newBeta, newBS);
 			if (score < newBeta) {
 				newBeta = score;
 			}
@@ -218,8 +212,8 @@ public class MyTools {
 		return newBeta;
 	}
 
-	private boolean cutoff(int d, TablutBoardState bs) {
-		return d <= 0 || bs.gameOver(); // FIXME timeover causes probelms?
+	private boolean cutoff(int d, TablutBoardState bs, long startTime) {
+		return d <= 0 || bs.gameOver() || System.currentTimeMillis() - startTime > MAX_TIME;
 	}
 
 	/**
