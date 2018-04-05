@@ -40,7 +40,6 @@ public class MyTools {
 		Timer timer = new Timer();
 		TimerTask timeoutTask = new TimerTask() {
 			public void run() {
-				System.out.println("time over !");
 				timeOver = true;
 			}
 		};
@@ -53,8 +52,6 @@ public class MyTools {
 		}
 		
 		
-		double alpha = Double.NEGATIVE_INFINITY;
-		double beta = Double.POSITIVE_INFINITY;
 		
 		long startTime = System.nanoTime();
 		
@@ -62,15 +59,16 @@ public class MyTools {
 			// -- re-implement a slight different version of Max Value
 			List<TablutMove> options = bs.getAllLegalMoves();
 
-			double newAlpha = alpha;
+			double newAlpha = Double.NEGATIVE_INFINITY;
 			Move bestMove = null;
 				
 			// Iterate over depths (just like iterative deepening)
 			for (int d = 3; d <= maxDepth; d++) {
 				for (TablutMove m : options){
+					newAlpha = Double.NEGATIVE_INFINITY;
 					TablutBoardState newBS = (TablutBoardState) bs.clone();
 					newBS.processMove(m);
-					double score = MinValue(d - 1, newAlpha, beta, newBS);
+					double score = MinValue(d - 1, newAlpha, Double.POSITIVE_INFINITY, newBS);
 					
 					/*
 					 *  Handle time management, return best so far.
@@ -101,15 +99,20 @@ public class MyTools {
 			// -- re-implement a slight different version of Min Value
 			List<TablutMove> options = bs.getAllLegalMoves();
 
-			double newBeta = beta;
+			double newBeta = Double.POSITIVE_INFINITY;
 			Move bestMove = null;
+			Move bestMovePreviousDepth = null;
+			double betaPreviousDepth = 0;
 			
 			for (int d = 3; d <= maxDepth; d++) {
+				bestMovePreviousDepth = bestMove;
+				betaPreviousDepth = newBeta; //FIXME
+				
 				for (TablutMove m : options){
 					TablutBoardState newBS = (TablutBoardState) bs.clone();
 					newBS.processMove(m);
 					
-					double score = MaxValue(d - 1, alpha, newBeta, newBS);
+					double score = MaxValue(d - 1, Double.NEGATIVE_INFINITY, newBeta, newBS);
 					
 					/*
 					 *  Handle time management, return best so far.
@@ -119,7 +122,7 @@ public class MyTools {
 					if (timeOver){
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
 						timer.cancel();
-						return new Pair(newBeta, bestMove);
+						return new Pair(betaPreviousDepth, bestMovePreviousDepth);
 					}
 					
 					/*
@@ -190,7 +193,7 @@ public class MyTools {
 	}
 	
 	private boolean cutoff(int d, TablutBoardState bs) {
-		return d <= 0 || bs.gameOver() || timeOver;
+		return d <= 0 || bs.gameOver() || timeOver; //FIXME timeover causes probelms?
 	}
 	
 	
@@ -216,11 +219,11 @@ public class MyTools {
 			 * when the player is in a very favorable position.
 			 */
 			if (bs.getWinner() == TablutBoardState.SWEDE){
-				return 10000 - bs.getTurnNumber(); // Trick to make it finish as quickly as possible.		
+				value += 100000 - bs.getTurnNumber(); // Trick to make it finish as quickly as possible.		
 			} else if (bs.getWinner() == Board.DRAW){
-				return 0;
+				value += 0; //FIXME clean up
 			} else if (bs.getWinner() == TablutBoardState.MUSCOVITE) {
-				return -10000 + bs.getTurnNumber();
+				value += -100000 + bs.getTurnNumber();
 			}
 		}
 		

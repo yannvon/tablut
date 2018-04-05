@@ -15,7 +15,7 @@ public class LearningPlayer1 extends TablutPlayer {
      * associate you with your agent. The constructor should do nothing else.
      */
     public LearningPlayer1() {
-        super("Player1");
+        super("PlayerY");
     }
 
     /**
@@ -28,17 +28,17 @@ public class LearningPlayer1 extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	if(tools == null){
-    		double[] weights = {0, 0, 0, 1};
+    		double[] weights = {1, 0.3, 0, 0};
     		tools = new MyTools(weights);
     	}
     	
     	//FIXME put depth as weight?
-        Pair bestMove = tools.alphaBetaPruning(3, boardState);
+        Pair bestMove = tools.alphaBetaPruning(5, boardState);
 
         // Is random the best you can do?
         System.out.println(bestMove.getValue());
         Move myMove = bestMove.getMove();
-
+        
         // Return your move to be processed by the server.
         return myMove;
     }

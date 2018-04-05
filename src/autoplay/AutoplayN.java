@@ -39,24 +39,18 @@ public class AutoplayN {
 
             Process server = server_pb.start();
             
-            Class[] cArg = new Class[1];
-            cArg[0] = Integer.class;
             ProcessBuilder client1_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
                     "boardgame.Client", "student_player.LearningPlayer1");
             client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
             ProcessBuilder client2_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
-                    "boardgame.Client", "student_player.LearningPlayer2");
+                    "boardgame.Client", "student_player.PlayerN");
             client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             
             
             /*
              * Stats
              */
-            int p1MuscWin = 0;
-            int p1SwedWin = 0;
-            int draws = 0;
-            
             for (int i = 0; i < n_games; i++) {
                 System.out.println("Game " + i);
 
