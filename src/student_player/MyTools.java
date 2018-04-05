@@ -16,9 +16,8 @@ public class MyTools {
 	public double[] weights;
 	public static final long MAX_TIME = 1900;
 	
-	public static boolean timeOver = false;
+	public static volatile boolean timeOver = false;
 
-	
 	public MyTools(double[] weights) {
 		this.weights = weights;
 	}
@@ -48,12 +47,13 @@ public class MyTools {
 		timer.schedule(timeoutTask, MAX_TIME);		
         
 		if (cutoff(maxDepth, bs)){
+			timer.cancel();
 			return new Pair(Evaluation(bs), null);
 		}
 		
 		
-		double alpha = Double.NEGATIVE_INFINITY;
-		double beta = Double.POSITIVE_INFINITY;
+		final double alpha = Double.NEGATIVE_INFINITY;
+		final double beta = Double.POSITIVE_INFINITY;
 		
 		long startTime = System.nanoTime();
 		
@@ -78,6 +78,7 @@ public class MyTools {
 					 */
 					if (timeOver){
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
+						timer.cancel();
 						return new Pair(newAlpha, bestMove);
 					}
 					
@@ -115,6 +116,7 @@ public class MyTools {
 					 */
 					if (timeOver){
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
+						timer.cancel();
 						return new Pair(newBeta, bestMove);
 					}
 					
@@ -129,7 +131,7 @@ public class MyTools {
 					}
 				}				
 			}
-			
+			timer.cancel();
 			return new Pair(newBeta, bestMove);
 		}
 	}
@@ -217,6 +219,7 @@ public class MyTools {
 			} else if (bs.getWinner() == TablutBoardState.MUSCOVITE) {
 				return -10000 + bs.getTurnNumber();
 			}
+			// Note: return directly otherwise weird behavior may happen ! (Trust me)
 		}
 		
 		// HEURISTIC 1: Number of pieces difference.
