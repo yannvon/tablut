@@ -39,7 +39,7 @@ public class MyToolsTimer {
 	 * @param bs
 	 * @return
 	 */
-	public Pair alphaBetaPruning(int maxDepth, TablutBoardState bs){
+	public Pair alphaBetaPruning(int startingDepth, int maxDepth, TablutBoardState bs){
 		timeOver = false;
 		timer = new Timer();
 		TimerTask timeoutTask = new TimerTask() {
@@ -64,9 +64,15 @@ public class MyToolsTimer {
 
 			double newAlpha = INIT_ALPHA;
 			Move bestMove = null;
+			
+			Move bestMoveLastDepth = null;
+			double bestAlphaLastDepth = INIT_ALPHA;
 				
 			// Iterate over depths (just like iterative deepening)
-			for (int d = 3; d <= maxDepth; d++) {
+			for (int d = startingDepth; d <= maxDepth; d++) {
+				
+				newAlpha = INIT_ALPHA;
+				
 				for (TablutMove m : options){
 					TablutBoardState newBS = (TablutBoardState) bs.clone();
 					newBS.processMove(m);
@@ -81,9 +87,8 @@ public class MyToolsTimer {
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
 						System.out.flush();
 						timer.cancel();
-						return new Pair(newAlpha, bestMove);
+						return new Pair(bestAlphaLastDepth, bestMoveLastDepth);
 					}
-					
 					/*
 					 * Normal case: update new best move if a better score
 					 * could be achieved taking it.
@@ -92,11 +97,17 @@ public class MyToolsTimer {
 					if (score > newAlpha) {
 						newAlpha = score;
 						bestMove = m;
+						if (d == startingDepth){
+							bestMoveLastDepth = m;
+							bestAlphaLastDepth = newAlpha;
+						}
 					}
 				}
+				bestMoveLastDepth = bestMove;
+				bestAlphaLastDepth = newAlpha;
 			}
-			
-			return new Pair(newAlpha, bestMove);
+			timer.cancel();
+			return new Pair(bestAlphaLastDepth, bestMoveLastDepth);
 		} else {
 			// -- re-implement a slight different version of Min Value
 			List<TablutMove> options = bs.getAllLegalMoves();
@@ -104,7 +115,10 @@ public class MyToolsTimer {
 			double newBeta = INIT_BETA;
 			Move bestMove = null;
 			
-			for (int d = 3; d <= maxDepth; d++) {
+			Move bestMoveLastDepth = null;
+			double bestBetaLastDepth = INIT_ALPHA;
+			
+			for (int d = startingDepth; d <= maxDepth; d++) {
 				for (TablutMove m : options){
 					TablutBoardState newBS = (TablutBoardState) bs.clone();
 					newBS.processMove(m);
@@ -120,7 +134,7 @@ public class MyToolsTimer {
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
 						System.out.flush();
 						timer.cancel();
-						return new Pair(newBeta, bestMove);
+						return new Pair(bestBetaLastDepth, bestMoveLastDepth);
 					}
 					
 					/*
@@ -131,11 +145,18 @@ public class MyToolsTimer {
 					if (score < newBeta){
 						newBeta = score;
 						bestMove = m;
+						if (d == startingDepth){
+							bestMoveLastDepth = m;
+							bestBetaLastDepth = newBeta;
+						}
 					}
-				}				
+				}
+				
+				bestMoveLastDepth = bestMove;
+				bestBetaLastDepth = newBeta;
 			}
 			timer.cancel();
-			return new Pair(newBeta, bestMove);
+			return new Pair(bestBetaLastDepth, bestMoveLastDepth);
 		}
 	}
 	
@@ -250,17 +271,6 @@ public class MyToolsTimer {
 			value += weights[2] * count;			
 		}
 		
-		// HEURISTIC 4: black pawns near corners
-//		count = 0;
-//		if (weights[3] != 0){	// this line avoids unnecessary computations
-//			HashSet<Coord> pieces = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? bs.getOpponentPieceCoordinates() : bs.getPlayerPieceCoordinates();
-//			
-//			for(Coord p : pieces){
-//				count += Coordinates.distanceToClosestCorner(p);
-//			}
-//			value += weights[3] * count;
-//		}
-//		
 		return value;
 		
 		/*

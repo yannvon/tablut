@@ -32,14 +32,14 @@ public class DifferentialEvolution {
 	 * 
 	 */
 	public static int COUNT = 0;
-	public static final int N_GAMES = 10;
+	public static final int N_GAMES = 6;
 	public static final int MAX_WEIGHT = 50; // TODO Test different values
 	public static final int MIN_WEIGHT = 0;
 	public static LinkedList<int[]> population = new LinkedList<>();
 	public static Random random = new Random(2048);
 
 	private static int populationSize = 10;
-	private static double differentialWeight = 0.2;
+	private static double differentialWeight = 0.5;
 	private static double crossOverProba = 0.5;
 	public static final int DIMENSIONALITY = 3;
 	

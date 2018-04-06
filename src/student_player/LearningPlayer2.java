@@ -15,7 +15,7 @@ import tablut.TablutPlayer;
 public class LearningPlayer2 extends TablutPlayer {
 	public static final int MAX_DEPTH = 3;
 	
-	private MyToolsClean tools;
+	private MyToolsTimer tools;
 	
 	
     /**
@@ -52,14 +52,14 @@ public class LearningPlayer2 extends TablutPlayer {
 					weights[i] = Integer.valueOf(numbers.substring(1 + 3*i, 3 + 3*i));
 				}
 				
-				tools = new MyToolsClean(weights);
+				tools = new MyToolsTimer(weights);
 				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
     	}
     	
-        MyToolsClean.Pair bestMove = tools.alphaBetaPruning(MAX_DEPTH, boardState);
+        MyToolsTimer.Pair bestMove = tools.alphaBetaPruning(MAX_DEPTH, MAX_DEPTH, boardState);
         Move myMove = bestMove.getMove();
 
         // Return your move to be processed by the server.

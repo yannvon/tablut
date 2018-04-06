@@ -33,7 +33,7 @@ public class LearningPlayerTest extends TablutPlayer {
     	}
     	
     	//FIXME put depth as weight?
-        Pair bestMove = tools.alphaBetaPruning(10, boardState);
+        Pair bestMove = tools.alphaBetaPruning(4, 10, boardState);
 
         System.out.println(bestMove.getValue());
         Move myMove = bestMove.getMove();
