@@ -13,17 +13,14 @@ import tablut.TablutBoardState;
 import tablut.TablutMove;
 
 public class MyToolsTimer {
+	final double INIT_ALPHA = Double.NEGATIVE_INFINITY;
+	final double INIT_BETA = Double.POSITIVE_INFINITY;
 	public static final long MAX_TIME = 1900;
 	
 	public int[] weights;
 	private volatile boolean timeOver; //NOT STATIC !
 	private volatile Timer timer;
-	final TimerTask timeoutTask = new TimerTask() {
-		public void run() {
-			System.out.println("time over !");
-			timeOver = true;
-		}
-	};
+	
 
 	public MyToolsTimer(int[] weights) {
 		this.weights = weights;
@@ -37,14 +34,20 @@ public class MyToolsTimer {
 	
 	/**
 	 * @param depth
-	 * @param alpha
-	 * @param beta
+	 * @param INIT_ALPHA
+	 * @param INIT_beta
 	 * @param bs
 	 * @return
 	 */
 	public Pair alphaBetaPruning(int maxDepth, TablutBoardState bs){
 		timeOver = false;
 		timer = new Timer();
+		TimerTask timeoutTask = new TimerTask() {
+			public void run() {
+				System.out.println("time over !");
+				timeOver = true;
+			}
+		};
 		
 		timer.schedule(timeoutTask, MAX_TIME);		
         
@@ -53,17 +56,13 @@ public class MyToolsTimer {
 			return new Pair(Evaluation(bs), null);
 		}
 		
-		
-		final double alpha = Double.NEGATIVE_INFINITY;
-		final double beta = Double.POSITIVE_INFINITY;
-		
 		long startTime = System.nanoTime();
 		
 		if (bs.getTurnPlayer() == TablutBoardState.SWEDE) {
 			// -- re-implement a slight different version of Max Value
 			List<TablutMove> options = bs.getAllLegalMoves();
 
-			double newAlpha = alpha;
+			double newAlpha = INIT_ALPHA;
 			Move bestMove = null;
 				
 			// Iterate over depths (just like iterative deepening)
@@ -71,7 +70,7 @@ public class MyToolsTimer {
 				for (TablutMove m : options){
 					TablutBoardState newBS = (TablutBoardState) bs.clone();
 					newBS.processMove(m);
-					double score = MinValue(d - 1, newAlpha, beta, newBS);
+					double score = MinValue(d - 1, newAlpha, INIT_BETA, newBS);
 					
 					/*
 					 *  Handle time management, return best so far.
@@ -102,7 +101,7 @@ public class MyToolsTimer {
 			// -- re-implement a slight different version of Min Value
 			List<TablutMove> options = bs.getAllLegalMoves();
 
-			double newBeta = beta;
+			double newBeta = INIT_BETA;
 			Move bestMove = null;
 			
 			for (int d = 3; d <= maxDepth; d++) {
@@ -110,7 +109,7 @@ public class MyToolsTimer {
 					TablutBoardState newBS = (TablutBoardState) bs.clone();
 					newBS.processMove(m);
 					
-					double score = MaxValue(d - 1, alpha, newBeta, newBS);
+					double score = MaxValue(d - 1, INIT_ALPHA, newBeta, newBS);
 					
 					/*
 					 *  Handle time management, return best so far.
@@ -136,7 +135,6 @@ public class MyToolsTimer {
 				}				
 			}
 			timer.cancel();
-			System.out.println("Done with my shit");
 			return new Pair(newBeta, bestMove);
 		}
 	}
@@ -229,7 +227,7 @@ public class MyToolsTimer {
 		
 		// HEURISTIC 1: Number of pieces difference.
 		int piecesDifference = bs.getNumberPlayerPieces(TablutBoardState.SWEDE) 
-				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE);
+				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE) + 7;
 		value += weights[0] * piecesDifference;
 
 		
@@ -241,7 +239,7 @@ public class MyToolsTimer {
 		
 		// HEURISTIC 3: General Mobility
 		int count = 0;
-		if (weights[2] != 0){	// this line avoids unnecessary computations
+		if (weights[2] != 0){
 			int mult = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? 1 : -1;
 			for (Coord c : bs.getPlayerPieceCoordinates()) {
 				count += mult * bs.getLegalMovesForPosition(c).size();

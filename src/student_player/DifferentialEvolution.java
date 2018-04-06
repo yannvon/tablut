@@ -48,7 +48,7 @@ public class DifferentialEvolution {
 
 	/*
 	 * I will first attempt to assign integer weights from 0 to 50 to reduce the
-	 * problem domain. FIXME run with floating point.
+	 * problem domain. FIXME run with floating point and maybe negative values.
 	 */
 	public static void main(String[] args) throws IOException {
 		
@@ -189,12 +189,15 @@ public class DifferentialEvolution {
         }
         /*
          * Read last N_GAMES logs to see who won.
+         * 
+         * If all goes well no concurrency issue here.
+         * 
          */
         int[] stats = readLogs();
         System.out.println("Old weights WINS (P1): " + stats[0]);
         System.out.println("New weights WINS (P2): " + stats[1]);
         System.out.println("Draws: " + stats[2]);
-        return stats[1] > stats[0];
+        return stats[1] > stats[0];	//Never is only better if more wins!
 	}
 	
 	

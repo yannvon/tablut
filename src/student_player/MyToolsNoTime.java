@@ -8,10 +8,13 @@ import coordinates.Coord;
 import tablut.TablutBoardState;
 import tablut.TablutMove;
 
-public class MyLearningTools {
+public class MyToolsNoTime {
 	public int[] weights;
+	final double INIT_ALPHA = Double.NEGATIVE_INFINITY;
+	final double INIT_beta = Double.POSITIVE_INFINITY;
+	
 
-	public MyLearningTools(int[] weights) {
+	public MyToolsNoTime(int[] weights) {
 		this.weights = weights;
 	}
 
@@ -20,34 +23,24 @@ public class MyLearningTools {
 	 * 
 	 */
 
-	/**
-	 * @param depth
-	 * @param alpha
-	 * @param beta
-	 * @param bs
-	 * @return
-	 */
 	public Pair alphaBetaPruning(int maxDepth, TablutBoardState bs) {
 
 		if (cutoff(maxDepth, bs)) {
 			return new Pair(Evaluation(bs), null);
 		}
 
-		final double alpha = Double.NEGATIVE_INFINITY;
-		final double beta = Double.POSITIVE_INFINITY;
-
 		if (bs.getTurnPlayer() == TablutBoardState.SWEDE) {
 			// -- re-implement a slight different version of Max Value
 			List<TablutMove> options = bs.getAllLegalMoves();
 
-			double newAlpha = alpha;
+			double newAlpha = INIT_ALPHA;
 			Move bestMove = null;
 
 			// Iterate over depths (just like iterative deepening)
 			for (TablutMove m : options) {
 				TablutBoardState newBS = (TablutBoardState) bs.clone();
 				newBS.processMove(m);
-				double score = MinValue(maxDepth - 1, newAlpha, beta, newBS);
+				double score = MinValue(maxDepth - 1, newAlpha, INIT_beta, newBS);
 
 				/*
 				 * Normal case: update new best move if a better score could be
@@ -64,14 +57,14 @@ public class MyLearningTools {
 			// -- re-implement a slight different version of Min Value
 			List<TablutMove> options = bs.getAllLegalMoves();
 
-			double newBeta = beta;
+			double newBeta = INIT_beta;
 			Move bestMove = null;
 
 			for (TablutMove m : options) {
 				TablutBoardState newBS = (TablutBoardState) bs.clone();
 				newBS.processMove(m);
 
-				double score = MaxValue(maxDepth - 1, alpha, newBeta, newBS);
+				double score = MaxValue(maxDepth - 1, INIT_ALPHA, newBeta, newBS);
 
 				/*
 				 * Normal case: update new best move if a better score could be
@@ -169,7 +162,6 @@ public class MyLearningTools {
 				return -10000 + bs.getTurnNumber();
 			}
 			// Note: return directly otherwise weird behavior may happen !
-			// (Trust me)
 		}
 
 		// HEURISTIC 1: Number of pieces difference.
@@ -196,30 +188,7 @@ public class MyLearningTools {
 			value += weights[2] * count;
 		}
 
-		// HEURISTIC 4: black pawns near corners
-//		count = 0;
-//		if (weights[3] != 0) { // this line avoids unnecessary computations
-//			HashSet<Coord> pieces = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? bs.getOpponentPieceCoordinates()
-//					: bs.getPlayerPieceCoordinates();
-//
-//			for (Coord p : pieces) {
-//				count += Coordinates.distanceToClosestCorner(p);
-//			}
-//			value += weights[3] * count;
-//		}
-
 		return value;
-
-		/*
-		 * Ideas: make it finish quickly, don't goof around ! (remove points
-		 * from score -> less pruning?
-		 * 
-		 * total number of pawns on board, (eating is good)
-		 * 
-		 * remove symmetric states
-		 * 
-		 * genetic algorithm
-		 */
 	}
 
 	/**
