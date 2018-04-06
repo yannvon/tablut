@@ -35,7 +35,6 @@ public class LearningPlayer1 extends TablutPlayer {
     	//FIXME put depth as weight?
         Pair bestMove = tools.alphaBetaPruning(4, boardState);
 
-        // Is random the best you can do?
         System.out.println(bestMove.getValue());
         Move myMove = bestMove.getMove();
 
