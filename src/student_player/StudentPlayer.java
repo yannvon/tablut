@@ -4,14 +4,14 @@ import java.util.List;
 
 import boardgame.Board;
 import boardgame.Move;
-import student_player.MyToolsTimer.Pair;
+import student_player.AlphaBetaPruningTimeLimited.Pair;
 import tablut.TablutBoardState;
 import tablut.TablutMove;
 import tablut.TablutPlayer;
 
 /** A player file submitted by a student. */
 public class StudentPlayer extends TablutPlayer {
-	private MyToolsTimer tools;
+	private AlphaBetaPruningTimeLimited tools;
 
     /**
      * You must modify this constructor to return your student number. This is

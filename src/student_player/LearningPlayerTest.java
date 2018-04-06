@@ -1,13 +1,13 @@
 package student_player;
 
 import boardgame.Move;
-import student_player.MyToolsTimer.Pair;
+import student_player.AlphaBetaPruningTimeLimited.Pair;
 import tablut.TablutBoardState;
 import tablut.TablutPlayer;
 
 /** A player file submitted by a student. */
 public class LearningPlayerTest extends TablutPlayer {
-	private MyToolsTimer tools;
+	private AlphaBetaPruningTimeLimited tools;
 	
     /**
      * You must modify this constructor to return your student number. This is
@@ -29,11 +29,11 @@ public class LearningPlayerTest extends TablutPlayer {
         // strategies...
     	if(tools == null){
     		int[] weights = {3, 5, 0};
-    		tools = new MyToolsTimer(weights);
+    		tools = new AlphaBetaPruningTimeLimited(weights);
     	}
     	
     	//FIXME put depth as weight?
-        Pair bestMove = tools.alphaBetaPruning(4, 10, boardState);
+        Pair bestMove = tools.getBestMove(4, 10, boardState);
 
         System.out.println(bestMove.getValue());
         Move myMove = bestMove.getMove();
