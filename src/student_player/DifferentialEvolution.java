@@ -17,6 +17,9 @@ import javax.swing.plaf.synth.SynthSeparatorUI;
  * 
  * This class implements a Genetic Algorithm called differential evolution.
  * 
+ * For this version I use floating point weights, and even allow negative values.
+ * Though I hope that these individuals will not survive.
+ * 
  * Disclaimer: This code matches closely the Algorithm and pseudocode that can
  * be found on the Wikipedia page.
  * (https://en.wikipedia.org/wiki/Differential_evolution)
@@ -25,70 +28,76 @@ import javax.swing.plaf.synth.SynthSeparatorUI;
  *
  */
 public class DifferentialEvolution {
-	/*
-	 * PROBLEMS:
-	 * 
-	 *  1) set n_games to 0, it will converge to an average of the values..
-	 * 
-	 */
-	public static int COUNT = 0;
-	public static final int N_GAMES = 6;
-	public static final int MAX_WEIGHT = 50; // TODO Test different values
-	public static final int MIN_WEIGHT = 0;
-	public static LinkedList<int[]> population = new LinkedList<>();
-	public static Random random = new Random(2048);
 
-	private static int populationSize = 10;
-	private static double differentialWeight = 0.5;
-	private static double crossOverProba = 0.5;
+	public static final int WEIGHT_SIZE = 10;
+	public static final int N_GAMES = 6;
+	public static final int MAX_GENERATIONS = 1000;
+	public static final double MAX_WEIGHT = Double.POSITIVE_INFINITY; // TODO Test different values
+	public static final double MIN_WEIGHT = Double.NEGATIVE_INFINITY;
+	public static final int POP_SIZE = 10;
+	public static final double DIFF_WEIGHT = 1;
+	public static final double CROSS_OVER_PROBA = 0.5;
 	public static final int DIMENSIONALITY = 3;
 	
-	public static volatile int[] LearningPlayer1Weights;
-	public static volatile int[] LearningPlayer2Weights;
+	public static LinkedList<double[]> population = new LinkedList<>();
+	public static Random random = new Random(2048);
+	
+	// Variables to keep track of evolution
+	public static int generationN = 0;
+	public static int indivUpdated = 0;
+	public static int totalProposalWin = 0;
+	public static int totalOldWin = 0;
+	public static int totalGamesPlayed = 0;
+	public static int indivUpdatedBecauseMoves = 0;
+	
+	public static PrintStream statsOut;
 
-	/*
-	 * I will first attempt to assign integer weights from 0 to 50 to reduce the
-	 * problem domain. FIXME run with floating point and maybe negative values.
-	 */
 	public static void main(String[] args) throws IOException {
 		
+		// Step 0: Keep file with some statistics
+		File dataFile = new File("data/stats.txt");
+		statsOut = new PrintStream(new FileOutputStream(dataFile));
+		
+		writeStatsToFile();
+		
 		// Step 1: Generate a new random population.
-		for (int i = 0; i < populationSize; i++) {
-			int[] newWeights = new int[DIMENSIONALITY];
+		for (int i = 0; i < POP_SIZE; i++) {
+			double[] newWeights = new double[DIMENSIONALITY];
 			for (int j = 0; j < DIMENSIONALITY; j++) {
-				newWeights[j] = random.nextInt(MAX_WEIGHT + 1);
+				newWeights[j] = random.nextDouble();
 			}
 			population.add(newWeights);
 		}
 		
 		writePopulationToFile();
 		
-		// Main Loop
-		for (int i = 0; i < 10; i++) {
-
+		// Main Loop of Generations
+		for (int i = 0; i < MAX_GENERATIONS; i++) {
+			generationN++;
+			
 			// Go through every agent x
-			for (int x = 0; x < populationSize; x++) {
+			for (int x = 0; x < POP_SIZE; x++) {
 				int a, b, c;
 				// 1) Pick 3 distinct agents a, b & c
 				do {
-					a = random.nextInt(populationSize);
+					a = random.nextInt(POP_SIZE);
 				} while (a == x);
 				do {
-					b = random.nextInt(populationSize);
+					b = random.nextInt(POP_SIZE);
 				} while (b == x || b == a);
 				do {
-					c = random.nextInt(populationSize);
+					c = random.nextInt(POP_SIZE);
 				} while (c == x || c == a || c == b);
 
 				// 2) Pick random index -> this weight will get changed for sure !
 				int R = random.nextInt(DIMENSIONALITY);
 				
 				// 3) compute the agents new weights
-				int[] newWeights = population.get(x).clone(); // shallow copy but good enough
+				double[] newWeights = population.get(x).clone(); // shallow copy but good enough
 				
-				int[] indiv1 = population.get(a);
-				int[] indiv2 = population.get(b);
-				int[] indiv3 = population.get(c);
+				double[] indiv1 = population.get(a);
+				double[] indiv2 = population.get(b);
+				double[] indiv3 = population.get(c);
 				
 				
 				/*
@@ -97,8 +106,8 @@ public class DifferentialEvolution {
 				 *  -weight was previously selected to change.
 				 */
 				for (int d = 0; d < DIMENSIONALITY; d++) {
-					if (R == d || random.nextDouble() < crossOverProba) {
-						int newW = (int) (indiv1[d] + Math.round(differentialWeight * (indiv2[d] - indiv3[d])));
+					if (R == d || random.nextDouble() < CROSS_OVER_PROBA) {
+						double newW = indiv1[d] + DIFF_WEIGHT * (indiv2[d] - indiv3[d]);
 						if (newW > MAX_WEIGHT) {
 							newW = MAX_WEIGHT;
 						} else if (newW < MIN_WEIGHT) {
@@ -119,6 +128,7 @@ public class DifferentialEvolution {
 					// Change population in memory
 					population.remove(x);
 					population.add(x, newWeights);
+					indivUpdated++;
 				
 					// Write new population to file
 					writePopulationToFile();
@@ -129,6 +139,7 @@ public class DifferentialEvolution {
 					// Write Population to file again
 					writePopulationToFile();
 				}
+				writeStatsToFile();
 			}
 		}
 	}
@@ -194,10 +205,26 @@ public class DifferentialEvolution {
          * 
          */
         int[] stats = readLogs();
+        
+        // Keep track of some stats
+        totalOldWin += stats[0];
+        totalProposalWin += stats[1];
+        totalGamesPlayed += N_GAMES;
+        
+        if (stats[1] == stats[0] && (stats[4] > stats[3])) {
+        	indivUpdatedBecauseMoves++;
+        	System.out.println("Updated because more Moves!");
+        }
+        
+        // Debug output
         System.out.println("Old weights WINS (P1): " + stats[0]);
         System.out.println("New weights WINS (P2): " + stats[1]);
         System.out.println("Draws: " + stats[2]);
-        return stats[1] > stats[0];	//Never is only better if more wins!
+        System.out.println("Moves Played When Lost: " + stats[3] + " vs " + stats[4]);
+        
+        boolean newerIsBetter = stats[1] > stats[0] || (stats[1] == stats[0] && (stats[4] > stats[3]));
+        
+        return newerIsBetter;	//Never is only better if more wins or survived longer!
 	}
 	
 	
@@ -212,18 +239,22 @@ public class DifferentialEvolution {
 		// Reverse order
 		Collections.reverse(allLines);
 		
-		int[] stats = {0,0,0}; // WINS P1, WINS P2, DRAWS
+		int[] stats = {0,0,0,0,0}; // WINS P1, WINS P2, DRAWS, P1 MOVES WHEN LOST, P2 MOVES WHEN LOST
 		for (int i = 0; i < N_GAMES; i++){
 			String s = allLines.removeFirst();
 			
 			boolean player1Win = s.lastIndexOf("LearningPlayer1") > s.lastIndexOf("LearningPlayer2");
-
+			;
+			int movesPlayed = Integer.valueOf(s.split(",")[5]);
+			
 			if (s.contains("DRAW")) {
 				stats[2]++;
 			} else if (player1Win) {
 				stats[0]++;
+				stats[4] += movesPlayed; 
 			} else {
 				stats[1]++;
+				stats[3] += movesPlayed;
 			}
 		}
 		br.close();
@@ -233,41 +264,50 @@ public class DifferentialEvolution {
 	
 	public static void writePopulationToFile() throws FileNotFoundException {
 		File logDir = new File("data");
-		File logFile = new File(logDir, "population" + COUNT + ".txt");
+		File logFile = new File(logDir, "population" + generationN + ".txt");
 		PrintStream dataOut = new PrintStream(new FileOutputStream(logFile));
 		
-		for (int i = 0; i < populationSize; i++) {
+		for (int i = 0; i < POP_SIZE; i++) {
 			dataOut.print("indiv" + String.format("%03d", i) + " ");
-			int[] weights = population.get(i);
+			double[] weights = population.get(i);
 			for (int j = 0; j < DIMENSIONALITY; j++) {
-				dataOut.print(String.format("%02d", weights[j]) + " ");
+				dataOut.print(String.format("%010f", weights[j]) + " ");
 			}
 			dataOut.println("");
 		}
 		dataOut.flush();
 		dataOut.close();
-		COUNT++;
 	}
 	
-	public static void setPlayingWeights(int x, int[] weights) throws FileNotFoundException {
+	public static void setPlayingWeights(int x, double[] weights) throws FileNotFoundException {
 		File dataFile = new File("data/playing.txt");
 		PrintStream dataOut = new PrintStream(new FileOutputStream(dataFile));
 		
 		// Put old first -> Player 1
 		dataOut.print("Player01 ");
-		int[] w = population.get(x);
+		double[] w = population.get(x);
 		for (int j = 0; j < DIMENSIONALITY; j++) {
-			dataOut.print(String.format("%02d", w[j]) + " ");
+			dataOut.print(String.format("%010f", w[j]) + " ");
 		}
 		dataOut.println("");
 	
 		// Put new weights -> Player 2
 		dataOut.print("Player02 ");
 		for (int j = 0; j < DIMENSIONALITY; j++) {
-			dataOut.print(String.format("%02d", weights[j]) + " ");
+			dataOut.print(String.format("%010f", weights[j]) + " ");
 		}
 		
 		dataOut.flush();
 		dataOut.close();
 	}
+	
+	public static void writeStatsToFile() throws FileNotFoundException {
+		statsOut.println("Current Generation: " + generationN + " Total games: " + totalGamesPlayed);
+		statsOut.print("Player01 (new) wins: " + totalProposalWin);
+		statsOut.println(" Player02 (old) wins: " + totalOldWin);
+		statsOut.println("Individuals updated: " + indivUpdated);
+		statsOut.println("Individuals updated because of more Steps only: " + indivUpdatedBecauseMoves);
+		statsOut.flush();
+	}
+
 }

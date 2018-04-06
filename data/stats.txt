@@ -1,0 +1,356 @@
+Current Generation: 0 Total games: 0
+Player01 (new) wins: 0 Player02 (old) wins: 0
+Individuals updated: 0
+Individuals updated because of more Steps only: 0
+Current Generation: 1 Total games: 6
+Player01 (new) wins: 3 Player02 (old) wins: 3
+Individuals updated: 1
+Individuals updated because of more Steps only: 1
+Current Generation: 1 Total games: 12
+Player01 (new) wins: 3 Player02 (old) wins: 9
+Individuals updated: 1
+Individuals updated because of more Steps only: 1
+Current Generation: 1 Total games: 18
+Player01 (new) wins: 5 Player02 (old) wins: 13
+Individuals updated: 1
+Individuals updated because of more Steps only: 1
+Current Generation: 1 Total games: 24
+Player01 (new) wins: 8 Player02 (old) wins: 16
+Individuals updated: 1
+Individuals updated because of more Steps only: 1
+Current Generation: 1 Total games: 30
+Player01 (new) wins: 11 Player02 (old) wins: 19
+Individuals updated: 2
+Individuals updated because of more Steps only: 2
+Current Generation: 1 Total games: 36
+Player01 (new) wins: 14 Player02 (old) wins: 22
+Individuals updated: 2
+Individuals updated because of more Steps only: 2
+Current Generation: 1 Total games: 42
+Player01 (new) wins: 16 Player02 (old) wins: 26
+Individuals updated: 2
+Individuals updated because of more Steps only: 2
+Current Generation: 1 Total games: 48
+Player01 (new) wins: 22 Player02 (old) wins: 26
+Individuals updated: 3
+Individuals updated because of more Steps only: 2
+Current Generation: 1 Total games: 54
+Player01 (new) wins: 24 Player02 (old) wins: 30
+Individuals updated: 3
+Individuals updated because of more Steps only: 2
+Current Generation: 1 Total games: 60
+Player01 (new) wins: 27 Player02 (old) wins: 33
+Individuals updated: 3
+Individuals updated because of more Steps only: 2
+Current Generation: 2 Total games: 66
+Player01 (new) wins: 30 Player02 (old) wins: 36
+Individuals updated: 4
+Individuals updated because of more Steps only: 3
+Current Generation: 2 Total games: 72
+Player01 (new) wins: 34 Player02 (old) wins: 38
+Individuals updated: 5
+Individuals updated because of more Steps only: 3
+Current Generation: 2 Total games: 78
+Player01 (new) wins: 38 Player02 (old) wins: 40
+Individuals updated: 6
+Individuals updated because of more Steps only: 3
+Current Generation: 2 Total games: 84
+Player01 (new) wins: 40 Player02 (old) wins: 44
+Individuals updated: 6
+Individuals updated because of more Steps only: 3
+Current Generation: 2 Total games: 90
+Player01 (new) wins: 43 Player02 (old) wins: 47
+Individuals updated: 6
+Individuals updated because of more Steps only: 3
+Current Generation: 2 Total games: 96
+Player01 (new) wins: 49 Player02 (old) wins: 47
+Individuals updated: 7
+Individuals updated because of more Steps only: 3
+Current Generation: 2 Total games: 102
+Player01 (new) wins: 52 Player02 (old) wins: 50
+Individuals updated: 7
+Individuals updated because of more Steps only: 3
+Current Generation: 2 Total games: 108
+Player01 (new) wins: 52 Player02 (old) wins: 56
+Individuals updated: 7
+Individuals updated because of more Steps only: 3
+Current Generation: 2 Total games: 114
+Player01 (new) wins: 55 Player02 (old) wins: 59
+Individuals updated: 8
+Individuals updated because of more Steps only: 4
+Current Generation: 2 Total games: 120
+Player01 (new) wins: 57 Player02 (old) wins: 60
+Individuals updated: 9
+Individuals updated because of more Steps only: 4
+Current Generation: 3 Total games: 126
+Player01 (new) wins: 63 Player02 (old) wins: 60
+Individuals updated: 10
+Individuals updated because of more Steps only: 4
+Current Generation: 3 Total games: 132
+Player01 (new) wins: 66 Player02 (old) wins: 63
+Individuals updated: 10
+Individuals updated because of more Steps only: 4
+Current Generation: 3 Total games: 138
+Player01 (new) wins: 72 Player02 (old) wins: 63
+Individuals updated: 11
+Individuals updated because of more Steps only: 4
+Current Generation: 3 Total games: 144
+Player01 (new) wins: 76 Player02 (old) wins: 65
+Individuals updated: 12
+Individuals updated because of more Steps only: 4
+Current Generation: 3 Total games: 150
+Player01 (new) wins: 79 Player02 (old) wins: 68
+Individuals updated: 13
+Individuals updated because of more Steps only: 5
+Current Generation: 3 Total games: 156
+Player01 (new) wins: 79 Player02 (old) wins: 74
+Individuals updated: 13
+Individuals updated because of more Steps only: 5
+Current Generation: 3 Total games: 162
+Player01 (new) wins: 85 Player02 (old) wins: 74
+Individuals updated: 14
+Individuals updated because of more Steps only: 5
+Current Generation: 3 Total games: 168
+Player01 (new) wins: 91 Player02 (old) wins: 74
+Individuals updated: 15
+Individuals updated because of more Steps only: 5
+Current Generation: 3 Total games: 174
+Player01 (new) wins: 92 Player02 (old) wins: 79
+Individuals updated: 15
+Individuals updated because of more Steps only: 5
+Current Generation: 3 Total games: 180
+Player01 (new) wins: 92 Player02 (old) wins: 82
+Individuals updated: 15
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 186
+Player01 (new) wins: 92 Player02 (old) wins: 88
+Individuals updated: 15
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 192
+Player01 (new) wins: 96 Player02 (old) wins: 90
+Individuals updated: 16
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 198
+Player01 (new) wins: 96 Player02 (old) wins: 96
+Individuals updated: 16
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 204
+Player01 (new) wins: 99 Player02 (old) wins: 99
+Individuals updated: 16
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 210
+Player01 (new) wins: 101 Player02 (old) wins: 103
+Individuals updated: 16
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 216
+Player01 (new) wins: 101 Player02 (old) wins: 107
+Individuals updated: 16
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 222
+Player01 (new) wins: 104 Player02 (old) wins: 110
+Individuals updated: 16
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 228
+Player01 (new) wins: 106 Player02 (old) wins: 114
+Individuals updated: 16
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 234
+Player01 (new) wins: 109 Player02 (old) wins: 117
+Individuals updated: 16
+Individuals updated because of more Steps only: 5
+Current Generation: 4 Total games: 240
+Player01 (new) wins: 115 Player02 (old) wins: 117
+Individuals updated: 17
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 246
+Player01 (new) wins: 117 Player02 (old) wins: 121
+Individuals updated: 17
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 252
+Player01 (new) wins: 121 Player02 (old) wins: 123
+Individuals updated: 18
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 258
+Player01 (new) wins: 121 Player02 (old) wins: 129
+Individuals updated: 18
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 264
+Player01 (new) wins: 121 Player02 (old) wins: 135
+Individuals updated: 18
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 270
+Player01 (new) wins: 126 Player02 (old) wins: 136
+Individuals updated: 19
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 276
+Player01 (new) wins: 126 Player02 (old) wins: 138
+Individuals updated: 19
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 282
+Player01 (new) wins: 126 Player02 (old) wins: 144
+Individuals updated: 19
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 288
+Player01 (new) wins: 126 Player02 (old) wins: 150
+Individuals updated: 19
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 294
+Player01 (new) wins: 128 Player02 (old) wins: 154
+Individuals updated: 19
+Individuals updated because of more Steps only: 5
+Current Generation: 5 Total games: 300
+Player01 (new) wins: 131 Player02 (old) wins: 157
+Individuals updated: 20
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 306
+Player01 (new) wins: 131 Player02 (old) wins: 163
+Individuals updated: 20
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 312
+Player01 (new) wins: 137 Player02 (old) wins: 163
+Individuals updated: 21
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 318
+Player01 (new) wins: 140 Player02 (old) wins: 166
+Individuals updated: 21
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 324
+Player01 (new) wins: 144 Player02 (old) wins: 166
+Individuals updated: 22
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 330
+Player01 (new) wins: 150 Player02 (old) wins: 166
+Individuals updated: 23
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 336
+Player01 (new) wins: 156 Player02 (old) wins: 166
+Individuals updated: 24
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 342
+Player01 (new) wins: 156 Player02 (old) wins: 172
+Individuals updated: 24
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 348
+Player01 (new) wins: 156 Player02 (old) wins: 178
+Individuals updated: 24
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 354
+Player01 (new) wins: 159 Player02 (old) wins: 181
+Individuals updated: 24
+Individuals updated because of more Steps only: 6
+Current Generation: 6 Total games: 360
+Player01 (new) wins: 159 Player02 (old) wins: 187
+Individuals updated: 24
+Individuals updated because of more Steps only: 6
+Current Generation: 7 Total games: 366
+Player01 (new) wins: 159 Player02 (old) wins: 191
+Individuals updated: 24
+Individuals updated because of more Steps only: 6
+Current Generation: 7 Total games: 372
+Player01 (new) wins: 159 Player02 (old) wins: 197
+Individuals updated: 24
+Individuals updated because of more Steps only: 6
+Current Generation: 7 Total games: 378
+Player01 (new) wins: 162 Player02 (old) wins: 200
+Individuals updated: 25
+Individuals updated because of more Steps only: 7
+Current Generation: 7 Total games: 384
+Player01 (new) wins: 164 Player02 (old) wins: 200
+Individuals updated: 26
+Individuals updated because of more Steps only: 7
+Current Generation: 7 Total games: 390
+Player01 (new) wins: 167 Player02 (old) wins: 203
+Individuals updated: 26
+Individuals updated because of more Steps only: 7
+Current Generation: 7 Total games: 396
+Player01 (new) wins: 170 Player02 (old) wins: 203
+Individuals updated: 27
+Individuals updated because of more Steps only: 7
+Current Generation: 7 Total games: 402
+Player01 (new) wins: 170 Player02 (old) wins: 209
+Individuals updated: 27
+Individuals updated because of more Steps only: 7
+Current Generation: 7 Total games: 408
+Player01 (new) wins: 171 Player02 (old) wins: 214
+Individuals updated: 27
+Individuals updated because of more Steps only: 7
+Current Generation: 7 Total games: 414
+Player01 (new) wins: 171 Player02 (old) wins: 220
+Individuals updated: 27
+Individuals updated because of more Steps only: 7
+Current Generation: 7 Total games: 420
+Player01 (new) wins: 174 Player02 (old) wins: 223
+Individuals updated: 27
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 426
+Player01 (new) wins: 177 Player02 (old) wins: 223
+Individuals updated: 28
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 432
+Player01 (new) wins: 180 Player02 (old) wins: 226
+Individuals updated: 28
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 438
+Player01 (new) wins: 184 Player02 (old) wins: 228
+Individuals updated: 29
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 444
+Player01 (new) wins: 190 Player02 (old) wins: 228
+Individuals updated: 30
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 450
+Player01 (new) wins: 193 Player02 (old) wins: 231
+Individuals updated: 30
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 456
+Player01 (new) wins: 193 Player02 (old) wins: 235
+Individuals updated: 30
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 462
+Player01 (new) wins: 193 Player02 (old) wins: 241
+Individuals updated: 30
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 468
+Player01 (new) wins: 199 Player02 (old) wins: 241
+Individuals updated: 31
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 474
+Player01 (new) wins: 203 Player02 (old) wins: 243
+Individuals updated: 32
+Individuals updated because of more Steps only: 7
+Current Generation: 8 Total games: 480
+Player01 (new) wins: 209 Player02 (old) wins: 243
+Individuals updated: 33
+Individuals updated because of more Steps only: 7
+Current Generation: 9 Total games: 486
+Player01 (new) wins: 213 Player02 (old) wins: 245
+Individuals updated: 34
+Individuals updated because of more Steps only: 7
+Current Generation: 9 Total games: 492
+Player01 (new) wins: 216 Player02 (old) wins: 247
+Individuals updated: 35
+Individuals updated because of more Steps only: 7
+Current Generation: 9 Total games: 498
+Player01 (new) wins: 222 Player02 (old) wins: 247
+Individuals updated: 36
+Individuals updated because of more Steps only: 7
+Current Generation: 9 Total games: 504
+Player01 (new) wins: 224 Player02 (old) wins: 250
+Individuals updated: 36
+Individuals updated because of more Steps only: 7
+Current Generation: 9 Total games: 510
+Player01 (new) wins: 228 Player02 (old) wins: 252
+Individuals updated: 37
+Individuals updated because of more Steps only: 7
+Current Generation: 9 Total games: 516
+Player01 (new) wins: 231 Player02 (old) wins: 255
+Individuals updated: 37
+Individuals updated because of more Steps only: 7
+Current Generation: 9 Total games: 522
+Player01 (new) wins: 233 Player02 (old) wins: 259
+Individuals updated: 37
+Individuals updated because of more Steps only: 7
+Current Generation: 9 Total games: 528
+Player01 (new) wins: 233 Player02 (old) wins: 265
+Individuals updated: 37
+Individuals updated because of more Steps only: 7

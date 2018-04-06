@@ -28,7 +28,7 @@ public class AlphaBetaPruningTimeLimited {
 	public static final long MAX_TIME = 1900;
 	
 	// Class Attributes
-	public int[] weights;
+	public double[] weights;
 	private volatile boolean timeOver; // Volatile because of concurrency issues
 	private volatile Timer timer;
 	
@@ -36,7 +36,7 @@ public class AlphaBetaPruningTimeLimited {
 	 * Constructor.
 	 * @param weights
 	 */
-	public AlphaBetaPruningTimeLimited(int[] weights) {
+	public AlphaBetaPruningTimeLimited(double[] weights) {
 		this.weights = weights;
 		this.timeOver = false;
 	}
@@ -310,7 +310,7 @@ public class AlphaBetaPruningTimeLimited {
 			for (Coord c : bs.getOpponentPieceCoordinates()) {
 				count -= mult * bs.getLegalMovesForPosition(c).size();
 			}
-			value += weights[2] * count;			
+			value += weights[2] * (count / 2.0);			
 		}
 		
 		// HEURISTIC 4: Closeness to Corners

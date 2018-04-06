@@ -1,13 +1,9 @@
 package student_player;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-import javax.xml.ws.WebEndpoint;
-
 import boardgame.Move;
-import student_player.AlphaBetaPruningTimeLimited.Pair;
 import tablut.TablutBoardState;
 import tablut.TablutPlayer;
 
@@ -46,11 +42,12 @@ public class LearningPlayer2 extends TablutPlayer {
 				System.out.println("weights " + numbers);
 		        System.out.flush();
 
-				int[] weights = new int[DifferentialEvolution.DIMENSIONALITY];
+		        double[] weights = new double[DifferentialEvolution.DIMENSIONALITY];
 				
 				for(int i = 0; i < DifferentialEvolution.DIMENSIONALITY; i++){
-					weights[i] = Integer.valueOf(numbers.substring(1 + 3*i, 3 + 3*i));
+					weights[i] = Double.valueOf(numbers.substring(1 + (DifferentialEvolution.WEIGHT_SIZE + 1)*i, 1 + (DifferentialEvolution.WEIGHT_SIZE + 1)*(i+1)));
 				}
+				
 				
 				tools = new AlphaBetaPruningTimeLimited(weights);
 				
