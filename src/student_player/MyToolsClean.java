@@ -128,7 +128,7 @@ public Pair alphaBetaPruning(int depth, TablutBoardState bs){
 
 		// HEURISTIC 1: Number of pieces difference.
 		int piecesDifference = bs.getNumberPlayerPieces(TablutBoardState.SWEDE)
-				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE);
+				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE) + 7;
 		value += weights[0] * piecesDifference;
 
 		// HEURISTIC 2: King Mobility.

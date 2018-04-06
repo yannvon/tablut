@@ -1,11 +1,17 @@
 package student_player;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
+
+import javax.swing.plaf.synth.SynthSeparatorUI;
 
 /**
  * 
@@ -25,13 +31,15 @@ public class DifferentialEvolution {
 	 *  1) set n_games to 0, it will converge to an average of the values..
 	 * 
 	 */
+	public static int COUNT = 0;
+	public static final int N_GAMES = 10;
 	public static final int MAX_WEIGHT = 50; // TODO Test different values
 	public static final int MIN_WEIGHT = 0;
 	public static LinkedList<int[]> population = new LinkedList<>();
 	public static Random random = new Random(2048);
 
 	private static int populationSize = 10;
-	private static double differentialWeight = 0.3;
+	private static double differentialWeight = 0.2;
 	private static double crossOverProba = 0.5;
 	public static final int DIMENSIONALITY = 3;
 	
@@ -42,7 +50,7 @@ public class DifferentialEvolution {
 	 * I will first attempt to assign integer weights from 0 to 50 to reduce the
 	 * problem domain. FIXME run with floating point.
 	 */
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		
 		// Step 1: Generate a new random population.
 		for (int i = 0; i < populationSize; i++) {
@@ -104,10 +112,13 @@ public class DifferentialEvolution {
 				// Put both proposal and x at the top of file.
 				
 				// Decide how many games to play: set to 0 to keep new value
-				if (isNewBetter(0)) { 
+				setPlayingWeights(x, newWeights);
+				
+				
+				if (isNewBetter(N_GAMES)) { 
 					// Change population in memory
 					population.remove(x);
-					population.addFirst(newWeights);	//FIXME make sure I dont mess up
+					population.add(x, newWeights);
 				
 					// Write new population to file
 					writePopulationToFile();
@@ -122,70 +133,104 @@ public class DifferentialEvolution {
 		}
 	}
 
-	public static boolean isNewBetter(int n_games) {
+	public static boolean isNewBetter(int n_games) throws IOException {
 		
+        try {
+            ProcessBuilder server_pb = new ProcessBuilder("java", "-cp", "bin", "boardgame.Server", "-ng", "-k");
+            server_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+
+            Process server = server_pb.start();
+            
+            ProcessBuilder client1_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
+                    "boardgame.Client", "student_player.LearningPlayer1");
+            client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+
+            ProcessBuilder client2_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
+                    "boardgame.Client", "student_player.LearningPlayer2");
+            client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            
+            
+            for (int i = 0; i < n_games; i++) {
+                System.out.println("Game " + i);
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+
+                Process client1 = ((i % 2 == 0) ? client1_pb.start() : client2_pb.start());
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+
+                Process client2 = ((i % 2 == 0) ? client2_pb.start() : client1_pb.start());
+
+                try {
+                    client1.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    client2.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            server.destroy();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*
+         * Read last N_GAMES logs to see who won.
+         */
+        int[] stats = readLogs();
+        System.out.println("Old weights WINS (P1): " + stats[0]);
+        System.out.println("New weights WINS (P2): " + stats[1]);
+        System.out.println("Draws: " + stats[2]);
+        return stats[1] > stats[0];
+	}
+	
+	
+	public static int[] readLogs() throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("logs/outcomes.txt"));
+		LinkedList<String> allLines = new LinkedList<>();
 		
-//        try {
-//            ProcessBuilder server_pb = new ProcessBuilder("java", "-cp", "bin", "boardgame.Server", "-ng", "-k");
-//            server_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-//
-//            Process server = server_pb.start();
-//            
-//            ProcessBuilder client1_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
-//                    "boardgame.Client", "student_player.LearningPlayer1");
-//            client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-//
-//            ProcessBuilder client2_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
-//                    "boardgame.Client", "student_player.LearningPlayer2");
-//            client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-//            
-//            
-//            for (int i = 0; i < n_games; i++) {
-//                System.out.println("Game " + i);
-//
-//                try {
-//                    Thread.sleep(500);
-//                } catch (InterruptedException ex) {
-//                    Thread.currentThread().interrupt();
-//                }
-//
-//                Process client1 = ((i % 2 == 0) ? client1_pb.start() : client2_pb.start());
-//
-//                try {
-//                    Thread.sleep(500);
-//                } catch (InterruptedException ex) {
-//                    Thread.currentThread().interrupt();
-//                }
-//
-//                Process client2 = ((i % 2 == 0) ? client2_pb.start() : client1_pb.start());
-//
-//                try {
-//                    client1.waitFor();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                try {
-//                    client2.waitFor();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            
-//            // Complicated: Read who won game and delete either first or second row
-//
-//            server.destroy();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        
-        return true;
+		while (br.ready()) {
+			allLines.add(br.readLine());
+		}
+		
+		// Reverse order
+		Collections.reverse(allLines);
+		
+		int[] stats = {0,0,0}; // WINS P1, WINS P2, DRAWS
+		for (int i = 0; i < N_GAMES; i++){
+			String s = allLines.removeFirst();
+			
+			boolean player1Win = s.lastIndexOf("LearningPlayer1") > s.lastIndexOf("LearningPlayer2");
+
+			if (s.contains("DRAW")) {
+				stats[2]++;
+			} else if (player1Win) {
+				stats[0]++;
+			} else {
+				stats[1]++;
+			}
+		}
+		br.close();
+		return stats;
+		
 	}
 	
 	public static void writePopulationToFile() throws FileNotFoundException {
 		File logDir = new File("data");
-		File logFile = new File(logDir, "population.txt");
+		File logFile = new File(logDir, "population" + COUNT + ".txt");
 		PrintStream dataOut = new PrintStream(new FileOutputStream(logFile));
 		
 		for (int i = 0; i < populationSize; i++) {
@@ -197,45 +242,29 @@ public class DifferentialEvolution {
 			dataOut.println("");
 		}
 		dataOut.flush();
+		dataOut.close();
+		COUNT++;
 	}
 	
-//	public static void putToTopAndAddProposal(int x, int[] weights) throws FileNotFoundException {
-//		File dataFile = new File("data/population.txt");
-//		PrintStream dataOut = new PrintStream(new FileOutputStream(dataFile));
-//		
-//		// Put old first
-//		dataOut.print("indiv" + String.format("%03d", x) + " ");
-//		int[] w = population.get(x);
-//		for (int j = 0; j < dimensionalty; j++) {
-//			dataOut.print(String.format("%02d", w[j]) + " ");
-//		}
-//		dataOut.println("");
-//	
-//		// Put new weights
-//		dataOut.print("indiv" + String.format("%03d", x) + " ");
-//		for (int j = 0; j < dimensionalty; j++) {
-//			dataOut.print(String.format("%02d", weights[j]) + " ");
-//		}
-//		dataOut.println("");
-//
-//
-//		for (int i = 0; i < populationSize && i < x; i++) {
-//			dataOut.print("indiv" + String.format("%03d", i) + " ");
-//			int[] weights1 = population.get(i);
-//			for (int j = 0; j < dimensionalty; j++) {
-//				dataOut.print(String.format("%02d", weights1[j]) + " ");
-//			}
-//			dataOut.println("");
-//		}
-//		for (int i = 0; i < populationSize && i > x; i++) {
-//			dataOut.print("indiv" + String.format("%03d", i) + " ");
-//			int[] weights1 = population.get(i);
-//			for (int j = 0; j < dimensionalty; j++) {
-//				dataOut.print(String.format("%02d", weights1[j]) + " ");
-//			}
-//			dataOut.println("");
-//		}
-//		
-//		dataOut.flush();
-//	}
+	public static void setPlayingWeights(int x, int[] weights) throws FileNotFoundException {
+		File dataFile = new File("data/playing.txt");
+		PrintStream dataOut = new PrintStream(new FileOutputStream(dataFile));
+		
+		// Put old first -> Player 1
+		dataOut.print("Player01 ");
+		int[] w = population.get(x);
+		for (int j = 0; j < DIMENSIONALITY; j++) {
+			dataOut.print(String.format("%02d", w[j]) + " ");
+		}
+		dataOut.println("");
+	
+		// Put new weights -> Player 2
+		dataOut.print("Player02 ");
+		for (int j = 0; j < DIMENSIONALITY; j++) {
+			dataOut.print(String.format("%02d", weights[j]) + " ");
+		}
+		
+		dataOut.flush();
+		dataOut.close();
+	}
 }

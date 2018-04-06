@@ -34,17 +34,16 @@ public class LearningPlayer1 extends TablutPlayer {
     	if(tools == null){
     		BufferedReader br;
 			try {
-				br = new BufferedReader(new FileReader("data/population.txt"));
+				br = new BufferedReader(new FileReader("data/playing.txt"));
 				String firstLine = br.readLine();
 				String numbers = firstLine.substring(8);
-				System.out.println("numbers " + numbers);
+				System.out.println("weights " + numbers);
 		        System.out.flush();
 
 				int[] weights = new int[DifferentialEvolution.DIMENSIONALITY];
 				
 				for(int i = 0; i < DifferentialEvolution.DIMENSIONALITY; i++){
 					weights[i] = Integer.valueOf(numbers.substring(1 + 3*i, 3 + 3*i));
-					System.out.println("Weight"+ i +": " + weights[i]);
 				}
 				
 				tools = new MyToolsClean(weights);
@@ -55,8 +54,6 @@ public class LearningPlayer1 extends TablutPlayer {
     	}
     	
         MyToolsClean.Pair bestMove = tools.alphaBetaPruning(MAX_DEPTH, boardState);
-        System.out.println("Player1: Best Value " + bestMove.getValue());
-        System.out.flush();
         Move myMove = bestMove.getMove();
 
         // Return your move to be processed by the server.
