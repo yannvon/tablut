@@ -13,13 +13,21 @@ import tablut.TablutBoardState;
 import tablut.TablutMove;
 
 public class MyTools {
-	public double[] weights;
 	public static final long MAX_TIME = 1900;
 	
-	public static volatile boolean timeOver = false;
+	public int[] weights;
+	private volatile boolean timeOver; //NOT STATIC !
+	private volatile Timer timer;
+	final TimerTask timeoutTask = new TimerTask() {
+		public void run() {
+			System.out.println("time over !");
+			timeOver = true;
+		}
+	};
 
-	public MyTools(double[] weights) {
+	public MyTools(int[] weights) {
 		this.weights = weights;
+		this.timeOver = false;
 	}
 
 	/*
@@ -36,13 +44,7 @@ public class MyTools {
 	 */
 	public Pair alphaBetaPruning(int maxDepth, TablutBoardState bs){
 		timeOver = false;
-		Timer timer = new Timer();
-		TimerTask timeoutTask = new TimerTask() {
-			public void run() {
-				System.out.println("time over !");
-				timeOver = true;
-			}
-		};
+		timer = new Timer();
 		
 		timer.schedule(timeoutTask, MAX_TIME);		
         
@@ -78,6 +80,7 @@ public class MyTools {
 					 */
 					if (timeOver){
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
+						System.out.flush();
 						timer.cancel();
 						return new Pair(newAlpha, bestMove);
 					}
@@ -116,6 +119,7 @@ public class MyTools {
 					 */
 					if (timeOver){
 						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = " + (System.nanoTime() - startTime));
+						System.out.flush();
 						timer.cancel();
 						return new Pair(newBeta, bestMove);
 					}
@@ -132,6 +136,7 @@ public class MyTools {
 				}				
 			}
 			timer.cancel();
+			System.out.println("Done with my shit");
 			return new Pair(newBeta, bestMove);
 		}
 	}
@@ -248,16 +253,16 @@ public class MyTools {
 		}
 		
 		// HEURISTIC 4: black pawns near corners
-		count = 0;
-		if (weights[3] != 0){	// this line avoids unnecessary computations
-			HashSet<Coord> pieces = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? bs.getOpponentPieceCoordinates() : bs.getPlayerPieceCoordinates();
-			
-			for(Coord p : pieces){
-				count += Coordinates.distanceToClosestCorner(p);
-			}
-			value += weights[3] * count;
-		}
-		
+//		count = 0;
+//		if (weights[3] != 0){	// this line avoids unnecessary computations
+//			HashSet<Coord> pieces = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? bs.getOpponentPieceCoordinates() : bs.getPlayerPieceCoordinates();
+//			
+//			for(Coord p : pieces){
+//				count += Coordinates.distanceToClosestCorner(p);
+//			}
+//			value += weights[3] * count;
+//		}
+//		
 		return value;
 		
 		/*

@@ -22,7 +22,7 @@ public class Client implements Runnable {
     private BufferedReader sockIn;
     private String serverName;
     private int serverPort;
-
+    
     Player player;
     int playerID;
     Board board;

@@ -1,5 +1,10 @@
 package student_player;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -23,15 +28,22 @@ public class DifferentialEvolution {
 	private static int populationSize = 10;
 	private static double differentialWeight = 1;
 	private static double crossOverProba = 0.5;
-	private static int dimensionalty = 3;
+	public static final int dimensionalty = 3;
 	private static int maxWeight = 50;
+	
+    private static File logDir = null;
+    private static PrintStream logOut = null;
+
+	
+	public static volatile int[] LearningPlayer1Weights;
+	public static volatile int[] LearningPlayer2Weights;
 
 	/*
 	 * I will first attempt to assign integer weights from 0 to 50 to reduce the
 	 * problem domain. FIXME run with floating point.
 	 */
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws FileNotFoundException {
+		
 		// Step 1: Generate a new random population.
 		for (int i = 0; i < populationSize; i++) {
 			int[] newWeights = new int[dimensionalty];
@@ -40,7 +52,9 @@ public class DifferentialEvolution {
 			}
 			population.add(newWeights);
 		}
-
+		
+		writePopulationToFile();
+		
 		// Main Loop
 		for (int i = 0; i < 10; i++) {
 
@@ -81,7 +95,7 @@ public class DifferentialEvolution {
 				}
 				
 				// 4) check if better than original if so, replace it !
-				if (isNewBetter(newWeights, population.get(x))) {
+				if (isNewBetter(newWeights, population.get(x), 2)) {
 					population.remove(x);
 					population.addFirst(newWeights);	//FIXME make sure I dont mess up
 				}
@@ -89,8 +103,82 @@ public class DifferentialEvolution {
 		}
 	}
 
-	public static boolean isNewBetter(int[] player1, int[] player2) {
+	public static boolean isNewBetter(int[] player1, int[] player2, int n_games) {
+		LearningPlayer1Weights = player1.clone();
+		LearningPlayer2Weights = player2.clone();
 		
-		return true;
+        try {
+            ProcessBuilder server_pb = new ProcessBuilder("java", "-cp", "bin", "boardgame.Server", "-ng", "-k");
+            server_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+
+            Process server = server_pb.start();
+            
+            ProcessBuilder client1_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
+                    "boardgame.Client", "student_player.LearningPlayer1");
+            client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+
+            ProcessBuilder client2_pb = new ProcessBuilder("java", "-cp", "bin", "-Xms520m", "-Xmx520m",
+                    "boardgame.Client", "student_player.LearningPlayer2");
+            client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            
+            
+            for (int i = 0; i < n_games; i++) {
+                System.out.println("Game " + i);
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+
+                Process client1 = ((i % 2 == 0) ? client1_pb.start() : client2_pb.start());
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+
+                Process client2 = ((i % 2 == 0) ? client2_pb.start() : client1_pb.start());
+
+                try {
+                    client1.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    client2.waitFor();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            // Complicated: Read who won game
+            
+
+            server.destroy();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return true;
+	}
+	
+	public static void writePopulationToFile() throws FileNotFoundException {
+		logDir = new File("data");
+		File logFile = new File(logDir, "population.txt");
+		logOut = new PrintStream(new FileOutputStream(logFile));
+		
+		for (int i = 0; i < populationSize; i++) {
+			logOut.print("indiv" + String.format("%03d", i) + " ");
+			int[] weights = population.get(i);
+			for (int j = 0; j < dimensionalty; j++) {
+				logOut.print(String.format("%02d", weights[j]) + " ");
+			}
+			logOut.println("");
+		}
+		logOut.flush();
 	}
 }
