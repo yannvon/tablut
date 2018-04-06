@@ -1,13 +1,13 @@
 package student_player;
 
 import boardgame.Move;
-import student_player.MyTools.Pair;
+import student_player.MyToolsTimer.Pair;
 import tablut.TablutBoardState;
 import tablut.TablutPlayer;
 
 /** A player file submitted by a student. */
 public class LearningPlayerTest extends TablutPlayer {
-	private MyTools tools;
+	private MyToolsTimer tools;
 	
     /**
      * You must modify this constructor to return your student number. This is
@@ -29,7 +29,7 @@ public class LearningPlayerTest extends TablutPlayer {
         // strategies...
     	if(tools == null){
     		int[] weights = {3, 1, 1};
-    		tools = new MyTools(weights);
+    		tools = new MyToolsTimer(weights);
     	}
     	
     	//FIXME put depth as weight?

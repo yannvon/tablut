@@ -4,45 +4,23 @@ import java.util.List;
 
 import boardgame.Board;
 import boardgame.Move;
-import student_player.MyToolsTimer.Pair;
+import coordinates.Coord;
 import tablut.TablutBoardState;
 import tablut.TablutMove;
-import tablut.TablutPlayer;
 
-/** A player file submitted by a student. */
-public class StudentPlayer extends TablutPlayer {
-	private MyToolsTimer tools;
+public class MyToolsClean {
+	public int[] weights;
 
-    /**
-     * You must modify this constructor to return your student number. This is
-     * important, because this is what the code that runs the competition uses to
-     * associate you with your agent. The constructor should do nothing else.
-     */
-    public StudentPlayer() {
-        super("260808862");
-    }
+	public MyToolsClean(int[] weights) {
+		this.weights = weights;
+	}
 
-    /**
-     * This is the primary method that you need to implement. The ``boardState``
-     * object contains the current state of the game, which your agent must use to
-     * make decisions.
-     */
-    public Move chooseMove(TablutBoardState boardState) {
-        // You probably will make separate functions in MyTools.
-        // For example, maybe you'll need to load some pre-processed best opening
-        // strategies...
-    	
-        Pair bestMove = alphaBetaPruning(3, boardState);
+	/*
+	 * MiniMax with Alpha Beta Pruning algorithm.
+	 * 
+	 */
 
-        // Is random the best you can do?
-        System.out.println(bestMove.getValue());
-        Move myMove = bestMove.getMove();
-
-        // Return your move to be processed by the server.
-        return myMove;
-    }
-    
-    public Pair alphaBetaPruning(int depth, TablutBoardState bs){
+public Pair alphaBetaPruning(int depth, TablutBoardState bs){
         
 		if (depth <= 0 || bs.gameOver()){
 			return new Pair(Evaluation(bs), null);
@@ -51,7 +29,7 @@ public class StudentPlayer extends TablutPlayer {
 		double beta = Double.POSITIVE_INFINITY;
 		
 		if (bs.getTurnPlayer() == TablutBoardState.SWEDE) {
-			return MaxValue(depth, alpha, beta, bs);	//FIXME create different methods here that keep track of the move !!
+			return MaxValue(depth, alpha, beta, bs);
 		} else {
 			return MinValue(depth, alpha, beta, bs);
 		}
@@ -114,46 +92,66 @@ public class StudentPlayer extends TablutPlayer {
 	private boolean cutoff(int d, TablutBoardState bs) {
 		return d <= 0 || bs.gameOver();
 	}
-	
-	
+
 	/**
-	 * Evaluation function.
-	 * High value good for SWEDES (white).
-	 * Low value good for MUSCOVITE (black).
+	 * Evaluation function. High value good for SWEDES (white). Low value good
+	 * for MUSCOVITE (black).
 	 * 
 	 * @param bs
 	 * @return evaluated board state
 	 */
-	private double Evaluation(TablutBoardState bs){
+	private double Evaluation(TablutBoardState bs) {
 		double value = 0;
-		
+
 		if (bs.gameOver()) {
-			if (bs.getWinner() == TablutBoardState.SWEDE){
-				return 1000;				
-			} else if (bs.getWinner() == Board.DRAW){
+			/*
+			 * Assign very large positive and negative numbers for
+			 * loosing/winning. Take away turn number to make it terminate more
+			 * quickly.
+			 * 
+			 * FIXME how does removing this turn-number impact performance?
+			 * Should I take it away for tournament? I guess its not too
+			 * important, since it only comes into play when the player is in a
+			 * very favorable position.
+			 */
+			if (bs.getWinner() == TablutBoardState.SWEDE) {
+				return 10000 - bs.getTurnNumber(); // Trick to make it finish as
+													// quickly as possible.
+			} else if (bs.getWinner() == Board.DRAW) {
 				return 0;
 			} else if (bs.getWinner() == TablutBoardState.MUSCOVITE) {
-				return -1000;				
-			} else {
-				throw new Error ("unhandled case"); //FIXME
+				return -10000 + bs.getTurnNumber();
 			}
+			// Note: return directly otherwise weird behavior may happen !
+			// (Trust me)
 		}
-		
-		// HEURISTIC 1: Number of pieces difference.
-		int piecesDifference = bs.getNumberPlayerPieces(TablutBoardState.SWEDE) 
-				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE) + 7;
-		return piecesDifference;
 
-		/*
-		 * Ideas:
-		 * 	make it finish quickly, don't goof around ! (remove points from score -> less pruning?
-		 * 
-		 * 	total number of pawns on board, (eating is good) 
-		 * 
-		 * 	remove symmetric states
-		 */
+		// HEURISTIC 1: Number of pieces difference.
+		int piecesDifference = bs.getNumberPlayerPieces(TablutBoardState.SWEDE)
+				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE);
+		value += weights[0] * piecesDifference;
+
+		// HEURISTIC 2: King Mobility.
+		if (weights[1] != 0) {
+			int mobilityKing = bs.getLegalMovesForPosition(bs.getKingPosition()).size();
+			value += weights[1] * mobilityKing;
+		}
+
+		// HEURISTIC 3: General Mobility
+		int count = 0;
+		if (weights[2] != 0) { // this line avoids unnecessary computations
+			int mult = (bs.getTurnPlayer() == TablutBoardState.SWEDE) ? 1 : -1;
+			for (Coord c : bs.getPlayerPieceCoordinates()) {
+				count += mult * bs.getLegalMovesForPosition(c).size();
+			}
+			for (Coord c : bs.getOpponentPieceCoordinates()) {
+				count -= mult * bs.getLegalMovesForPosition(c).size();
+			}
+			value += weights[2] * count;
+		}
+		return value;
 	}
-	
+
 	/**
 	 * Helper class.
 	 */
@@ -161,6 +159,7 @@ public class StudentPlayer extends TablutPlayer {
 		public double getValue() {
 			return x;
 		}
+
 		public Move getMove() {
 			return m;
 		}
@@ -169,8 +168,8 @@ public class StudentPlayer extends TablutPlayer {
 			this.x = x;
 			this.m = m;
 		}
+
 		private double x;
 		private Move m;
 	}
-
 }

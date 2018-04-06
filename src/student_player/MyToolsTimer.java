@@ -12,7 +12,7 @@ import coordinates.Coordinates;
 import tablut.TablutBoardState;
 import tablut.TablutMove;
 
-public class MyTools {
+public class MyToolsTimer {
 	public static final long MAX_TIME = 1900;
 	
 	public int[] weights;
@@ -25,7 +25,7 @@ public class MyTools {
 		}
 	};
 
-	public MyTools(int[] weights) {
+	public MyToolsTimer(int[] weights) {
 		this.weights = weights;
 		this.timeOver = false;
 	}

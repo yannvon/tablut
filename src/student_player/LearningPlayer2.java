@@ -7,13 +7,16 @@ import java.io.FileReader;
 import javax.xml.ws.WebEndpoint;
 
 import boardgame.Move;
-import student_player.MyTools.Pair;
+import student_player.MyToolsTimer.Pair;
 import tablut.TablutBoardState;
 import tablut.TablutPlayer;
 
 /** A player file submitted by a student. */
 public class LearningPlayer2 extends TablutPlayer {
-	private MyLearningTools tools;
+	public static final int MAX_DEPTH = 3;
+	
+	private MyToolsClean tools;
+	
 	
     /**
      * You must modify this constructor to return your student number. This is
@@ -34,13 +37,31 @@ public class LearningPlayer2 extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	if(tools == null){
-			int[] weights = {3,1,1};
-			tools = new MyLearningTools(weights);
+    		BufferedReader br;
+			try {
+				br = new BufferedReader(new FileReader("data/population.txt"));
+				br.readLine();
+				String firstLine = br.readLine();
+				String numbers = firstLine.substring(8);
+				System.out.println("numbers " + numbers);
+		        System.out.flush();
+
+				int[] weights = new int[DifferentialEvolution.DIMENSIONALITY];
+				
+				for(int i = 0; i < DifferentialEvolution.DIMENSIONALITY; i++){
+					weights[i] = Integer.valueOf(numbers.substring(1 + 3*i, 3 + 3*i));
+					System.out.println("Weight"+ i +": " + weights[i]);
+				}
+				
+				tools = new MyToolsClean(weights);
+				
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
     	}
     	
-        MyLearningTools.Pair bestMove = tools.alphaBetaPruning(3, boardState);
-        System.out.println("Best Move " + bestMove.getMove());
-        System.out.println("Best Value " + bestMove.getValue());
+        MyToolsClean.Pair bestMove = tools.alphaBetaPruning(MAX_DEPTH, boardState);
+        System.out.println("Player2: Best Value " + bestMove.getValue());
         System.out.flush();
         Move myMove = bestMove.getMove();
 
