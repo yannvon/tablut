@@ -263,8 +263,9 @@ public class AlphaBetaPruning {
 	}
 
 	/**
-	 * Simple linear weighted Evaluation function. High value good for SWEDES
-	 * (white). Low value good for MUSCOVITE (black).
+	 * Simple linear weighted Evaluation function. 
+	 * High value good for SWEDES (white). 
+	 * Low value good for MUSCOVITE (black).
 	 * 
 	 * @param bs
 	 * @return evaluated board state
@@ -293,18 +294,17 @@ public class AlphaBetaPruning {
 				- bs.getNumberPlayerPieces(TablutBoardState.MUSCOVITE) + 7;
 		value += weights[0] * piecesDifference;
 
-		// HEURISTIC 2: King Mobility FIXME
-		/*
+		// HEURISTIC 2: King Mobility
 		if (weights[1] != 0) {
-			int mobilityKing = bs.getLegalMovesForPosition(bs.getKingPosition()).size();
+			int mobilityKing = getMoveNumberForPosition(bs, bs.getKingPosition());
 			value += weights[1] * mobilityKing;
 		}
-		*/
 		
-		// HEURISTIC 3: Black Mobility FIXME 
+		// HEURISTIC 3: Black Mobility
 		/* (might impact ability to answer to what white does)
 		 * can't be done easily since getAllLegalMoves works only for
 		 * current player and the useful methods are private..
+		 */
 		if (weights[2] != 0) {
 			int blackMobility = 0;
 
@@ -315,21 +315,21 @@ public class AlphaBetaPruning {
 				blackPieces = bs.getPlayerPieceCoordinates();
 			}
 			for (Coord c : blackPieces) {
-				blackMobility += bs.getLegalMovesForPosition(c).size();
-				// Problem !
+				blackMobility += getMoveNumberForPosition(bs, c);
 			}
 			
-			value += weights[2] * blackMobility;
+			// Black mobility is supposed to be bad for White
+			value -= weights[2] * blackMobility;
 		}
-		 */
 
 		// HEURISTIC 4: Distance of King to Corner
-		value += weights[3] * Coordinates.distanceToClosestCorner(bs.getKingPosition());
+		// small distance is better for white
+		value -= weights[3] * Coordinates.distanceToClosestCorner(bs.getKingPosition());
 
 		// HEURISTIC 5: free rows and columns
 		if (weights[4] != 0) {
+			// Free rows and columns favors attacker ! (Or does it? Genetic Algo will tell)
 			value += weights[5] * freeRowsAndColumns(bs); 
-			// Free rows and columns favors attacker !
 		}
 
 		// HEURISTIC 6: Number of corners blocked by attacker
@@ -339,20 +339,68 @@ public class AlphaBetaPruning {
 		}
 
 		// HEURISTIC 7: Corner escape
-
+		// TODO
 		
 		
 		/*
-		 * Note: Too many heuristics were bad for performance, and additionally
-		 * made the use of a genetic algorithm much harder, since more
-		 * dimensions imply a longer execution time.
+		 * Note: I originally thought that too many heuristics were bad 
+		 * for performance, and additionally and that they made the use of 
+		 * a genetic algorithm much harder, since more dimensions imply 
+		 * a longer execution time.
+		 * 
+		 * To my surprise that was actually not true, as even when adding
+		 * lots of (non-optimized) heuristics, I could still achieve a
+		 * similar depth. This counter-intuitive fact is certainly due
+		 * to a larger amount of nodes that can be pruned, since the
+		 * heuristics produce a larger range of values! :)
 		 */
 
 		return value;
 	}
 	
 	/**
+	 * Helper function.
+	 * Disclaimer: similar to getAllLegalMoves(), code taken from there.
+	 */
+	public static int getMoveNumberForPosition(TablutBoardState bs, Coord c) {
+		int count = 0;
+		
+		count += getLegalCoordsInDirection(bs, c, -1, 0); // move in -x direction
+        count += getLegalCoordsInDirection(bs, c, 0, -1); // move in -y direction
+        count += getLegalCoordsInDirection(bs, c, 1, 0); // move in +x direction
+        count += getLegalCoordsInDirection(bs, c, 0, 1); // move in +y direction
+		
+		return count;
+	}
+	
+	/**
+	 * Helper function.
+	 * Disclaimer: copied from TablutBoardState.
+	 */
+	 private static int getLegalCoordsInDirection(TablutBoardState bs, Coord start, int x, int y) {
+		int count = 0;
+		
+        assert (!(x != 0 && y != 0));
+        int startPos = (x != 0) ? start.x : start.y; // starting at x or y
+        int incr = (x != 0) ? x : y; // incrementing the x or y value
+        int endIdx = (incr == 1) ? TablutBoardState.BOARD_SIZE - 1 : 0; // moving in the 0 or 8 direction
+
+        for (int i = startPos + incr; incr * i <= endIdx; i += incr) { // increasing/decreasing functionality
+            // new coord is an x coord change or a y coord change
+            Coord coord = (x != 0) ? Coordinates.get(i, start.y) : Coordinates.get(start.x, i);
+            if (bs.coordIsEmpty(coord)) {
+            	count++;
+            } else {
+                break;
+            }
+        }
+        return count;
+    }
+	 
+	/**
 	 * Helper function that returns free rows and columns.
+	 * 
+	 * TODO write it cleaner and shorter. (sadly I ran out of time)
 	 * 
 	 * @param bs
 	 * @return
@@ -484,9 +532,7 @@ public class AlphaBetaPruning {
 			}
 		}
 		
-		System.out.println("Blocked by white: " + blockedByWhite);
 		return blockedByWhite;
-
 	}
 
 	/**

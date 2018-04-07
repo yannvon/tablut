@@ -308,6 +308,25 @@ public class TablutBoardState extends BoardState {
         }
         return coords;
     }
+    
+    private List<Coord> getLegalCoordsInDirection(TablutBoardState bs, Coord start, int x, int y) {
+        ArrayList<Coord> coords = new ArrayList<>();
+        assert (!(x != 0 && y != 0));
+        int startPos = (x != 0) ? start.x : start.y; // starting at x or y
+        int incr = (x != 0) ? x : y; // incrementing the x or y value
+        int endIdx = (incr == 1) ? BOARD_SIZE - 1 : 0; // moving in the 0 or 8 direction
+
+        for (int i = startPos + incr; incr * i <= endIdx; i += incr) { // increasing/decreasing functionality
+            // new coord is an x coord change or a y coord change
+            Coord coord = (x != 0) ? Coordinates.get(i, start.y) : Coordinates.get(start.x, i);
+            if (coordIsEmpty(coord)) {
+                coords.add(coord);
+            } else {
+                break;
+            }
+        }
+        return coords;
+    }
 
     // Determines whether or not this coord is a valid coord we can sandwich with.
     private boolean canCaptureWithCoord(Coord c) {
