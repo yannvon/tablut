@@ -9,8 +9,8 @@ import tablut.TablutPlayer;
 
 /** A player file submitted by a student. */
 public class LearningPlayer1 extends TablutPlayer {
-	public static final int MIN_DEPTH = 4;
-	public static final int MAX_DEPTH = 5;
+	public static final int MIN_DEPTH = 3;
+	public static final int MAX_DEPTH = 3;
 	private AlphaBetaPruning tools;
 	
     /**

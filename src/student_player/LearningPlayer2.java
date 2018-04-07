@@ -10,6 +10,7 @@ import tablut.TablutPlayer;
 /** A player file submitted by a student. */
 public class LearningPlayer2 extends TablutPlayer {
 	public static final int MAX_DEPTH = 3;
+	public static final int MIN_DEPTH = 3;
 	
 	private AlphaBetaPruning tools;
 	
@@ -56,7 +57,7 @@ public class LearningPlayer2 extends TablutPlayer {
 			}
     	}
     	
-        AlphaBetaPruning.Pair bestMove = tools.getBestMove(MAX_DEPTH, MAX_DEPTH, boardState);
+        AlphaBetaPruning.Pair bestMove = tools.getBestMove(MIN_DEPTH, MAX_DEPTH, boardState);
         Move myMove = bestMove.getMove();
 
         // Return your move to be processed by the server.

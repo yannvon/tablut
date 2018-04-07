@@ -26,7 +26,6 @@ public class LearningPlayerTest extends TablutPlayer {
 		 double[] weights = {3,5,1,2,1,1};
 		 AlphaBetaPruning tools = new AlphaBetaPruning(weights);
 		 
-		 
 		 /*
 		  * Test some of my helper functions.
 		  */

@@ -341,7 +341,6 @@ public class AlphaBetaPruning {
 		// HEURISTIC 7: Corner escape
 		// TODO
 		
-		
 		/*
 		 * Note: I originally thought that too many heuristics were bad 
 		 * for performance, and additionally and that they made the use of 

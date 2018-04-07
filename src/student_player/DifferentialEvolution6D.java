@@ -146,7 +146,9 @@ public class DifferentialEvolution6D {
 	}
 
 	public static boolean isNewBetter(int n_games) throws IOException {
-		
+		/*
+		 *  Disclaimer: Code copied from Autoplay.java
+		 */
         try {
             ProcessBuilder server_pb = new ProcessBuilder("java", "-cp", "bin", "boardgame.Server", "-ng", "-k");
             server_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -201,9 +203,7 @@ public class DifferentialEvolution6D {
         }
         /*
          * Read last N_GAMES logs to see who won.
-         * 
          * If all goes well no concurrency issue here.
-         * 
          */
         int[] stats = readLogs();
         
@@ -225,7 +225,7 @@ public class DifferentialEvolution6D {
         
         boolean newerIsBetter = stats[1] > stats[0] || (stats[1] == stats[0] && (stats[4] > stats[3]));
         
-        return newerIsBetter;	//Never is only better if more wins or survived longer!
+        return newerIsBetter;	// Never is only better if more wins or survived longer!
 	}
 	
 	
@@ -245,7 +245,6 @@ public class DifferentialEvolution6D {
 			String s = allLines.removeFirst();
 			
 			boolean player1Win = s.lastIndexOf("LearningPlayer1") > s.lastIndexOf("LearningPlayer2");
-			;
 			int movesPlayed = Integer.valueOf(s.split(",")[5]);
 			
 			if (s.contains("DRAW")) {
@@ -315,6 +314,7 @@ public class DifferentialEvolution6D {
 		double sum = 0;
 		for (double i : weights) {
 			sum += Math.abs(i); // FIXME Should values lay on a sphere or cube?
+			// i.e. should take square root of squared or abs?
 		}
 		double[] newWeights = weights.clone();
 		for (int i = 0; i < weights.length; i++) {
