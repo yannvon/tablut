@@ -11,7 +11,7 @@ import tablut.TablutPlayer;
 public class LearningPlayer2 extends TablutPlayer {
 	public static final int MAX_DEPTH = 3;
 	
-	private AlphaBetaPruningTimeLimited tools;
+	private AlphaBetaPruning tools;
 	
 	
     /**
@@ -42,21 +42,21 @@ public class LearningPlayer2 extends TablutPlayer {
 				System.out.println("weights " + numbers);
 		        System.out.flush();
 
-		        double[] weights = new double[DifferentialEvolution.DIMENSIONALITY];
+		        double[] weights = new double[DifferentialEvolution3D.DIMENSIONALITY];
 				
-				for(int i = 0; i < DifferentialEvolution.DIMENSIONALITY; i++){
-					weights[i] = Double.valueOf(numbers.substring(1 + (DifferentialEvolution.WEIGHT_SIZE + 1)*i, 1 + (DifferentialEvolution.WEIGHT_SIZE + 1)*(i+1)));
+				for(int i = 0; i < DifferentialEvolution3D.DIMENSIONALITY; i++){
+					weights[i] = Double.valueOf(numbers.substring(1 + (DifferentialEvolution3D.WEIGHT_SIZE + 1)*i, 1 + (DifferentialEvolution3D.WEIGHT_SIZE + 1)*(i+1)));
 				}
 				
 				
-				tools = new AlphaBetaPruningTimeLimited(weights);
+				tools = new AlphaBetaPruning(weights);
 				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
     	}
     	
-        AlphaBetaPruningTimeLimited.Pair bestMove = tools.getBestMove(MAX_DEPTH, MAX_DEPTH, boardState);
+        AlphaBetaPruning.Pair bestMove = tools.getBestMove(MAX_DEPTH, MAX_DEPTH, boardState);
         Move myMove = bestMove.getMove();
 
         // Return your move to be processed by the server.

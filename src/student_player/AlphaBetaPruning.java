@@ -20,7 +20,7 @@ import tablut.TablutMove;
  * @author Yann Vonlanthen (260808862)
  *
  */
-public class AlphaBetaPruningTimeLimited {
+public class AlphaBetaPruning {
 	
 	// Constants
 	public static final double INIT_ALPHA = Double.NEGATIVE_INFINITY;
@@ -36,7 +36,7 @@ public class AlphaBetaPruningTimeLimited {
 	 * Constructor.
 	 * @param weights
 	 */
-	public AlphaBetaPruningTimeLimited(double[] weights) {
+	public AlphaBetaPruning(double[] weights) {
 		this.weights = weights;
 		this.timeOver = false;
 	}

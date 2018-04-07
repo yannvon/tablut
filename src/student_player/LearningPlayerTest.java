@@ -1,13 +1,13 @@
 package student_player;
 
 import boardgame.Move;
-import student_player.AlphaBetaPruningTimeLimited.Pair;
+import student_player.AlphaBetaPruning.Pair;
 import tablut.TablutBoardState;
 import tablut.TablutPlayer;
 
 /** A player file submitted by a student. */
 public class LearningPlayerTest extends TablutPlayer {
-	private AlphaBetaPruningTimeLimited tools;
+	private AlphaBetaPruning tools;
 	
     /**
      * You must modify this constructor to return your student number. This is
@@ -28,8 +28,8 @@ public class LearningPlayerTest extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	if(tools == null){
-    		double[] weights = {3, 5, 0};
-    		tools = new AlphaBetaPruningTimeLimited(weights);
+    		double[] weights = {1, 0.29, 0};
+    		tools = new AlphaBetaPruning(weights);
     	}
     	
     	//FIXME put depth as weight?
