@@ -28,7 +28,7 @@ public class LearningPlayerTest extends TablutPlayer {
         // For example, maybe you'll need to load some pre-processed best opening
         // strategies...
     	if(tools == null){
-    		double[] weights = {1, 0.29, 0};
+    		double[] weights = {3, 5, 0};
     		tools = new AlphaBetaPruning(weights);
     	}
     	

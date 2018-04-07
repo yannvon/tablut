@@ -66,7 +66,7 @@ public class DifferentialEvolution3D {
 			for (int j = 0; j < DIMENSIONALITY; j++) {
 				newWeights[j] = random.nextDouble();
 			}
-			population.add(newWeights);
+			population.add(normalize(newWeights));
 		}
 		
 		writePopulationToFile();
@@ -116,6 +116,7 @@ public class DifferentialEvolution3D {
 						newWeights[d] = newW;
 					}
 				}
+				newWeights = normalize(newWeights);
 				
 				// 4) check if better than original if so, replace it !
 				// Put both proposal and x at the top of file.
@@ -308,6 +309,18 @@ public class DifferentialEvolution3D {
 		statsOut.println("Individuals updated: " + indivUpdated);
 		statsOut.println("Individuals updated because of more Steps only: " + indivUpdatedBecauseMoves);
 		statsOut.flush();
+	}
+	
+	public static double[] normalize(double[] weights) {
+		double sum = 0;
+		for (double i : weights) {
+			sum += Math.abs(i); // FIXME Should values lay on a sphere or cube?
+		}
+		double[] newWeights = weights.clone();
+		for (int i = 0; i < weights.length; i++) {
+			newWeights[i] = weights[i] / sum;
+		}
+		return newWeights;
 	}
 
 }
