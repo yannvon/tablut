@@ -12,12 +12,13 @@ public class StudentPlayer extends TablutPlayer {
 	public static final int MIN_DEPTH = 3;
 	public static final int MAX_DEPTH = 5;
 	
+	// Weights learned after a couple hours of evolution
 	private static final double N_PIECES_W = 0.323785;
 	private static final double KING_MOBILITY_W = 0.059866;
 	private static final double BLACK_MOBILITY_W = 0.049957;
 	private static final double KING_DIST_CORNER_W = 0.411849;
 	private static final double N_FREE_ROW_COL = 0.020662;
-	private static final double N_BLOCKED_CORNERS = -0.133881; //FIXME try 0
+	private static final double N_BLOCKED_CORNERS = -0.133881;
 	
 
     /**

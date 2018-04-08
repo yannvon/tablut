@@ -72,8 +72,8 @@ public class AlphaBetaPruning {
 			return new Pair(Evaluation(bs), null);
 		}
 
-		// FIXME only for debugging purposes, second way to keep time
-		long startTime = System.nanoTime();
+		// Only for debugging purposes, second way to keep time
+		// long startTime = System.nanoTime();
 
 		// Perform first level of the MiniMax openly.
 		if (bs.getTurnPlayer() == TablutBoardState.SWEDE) {
@@ -87,7 +87,7 @@ public class AlphaBetaPruning {
 
 			// Keep Track of best values at last depth
 			// These values will get returned if time is over.
-			// FIXME If this isn't done, I experienced weird behavior.
+			// If this isn't done, I experienced weird behavior.
 			Move bestMoveLastDepth = null;
 			double bestAlphaLastDepth = INIT_ALPHA;
 
@@ -105,16 +105,15 @@ public class AlphaBetaPruning {
 					double score = MinValue(d - 1, newAlpha, INIT_BETA, newBS);
 
 					/*
-					 * FIXME Handle time management, return best so far. Note
+					 * Handles time management, return best so far. Note
 					 * that the last possible move is not taken into
 					 * consideration, as it might be incorrect due to early
 					 * stopping of calculations.
 					 */
 					if (timeOver) {
-						// FIXME for debugging
-						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = "
-								+ (System.nanoTime() - startTime));
-						System.out.flush();
+						// For debugging
+						//System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = "
+						//		+ (System.nanoTime() - startTime));
 						timer.cancel();
 						return new Pair(bestAlphaLastDepth, bestMoveLastDepth);
 					}
@@ -159,9 +158,8 @@ public class AlphaBetaPruning {
 					double score = MaxValue(d - 1, INIT_ALPHA, newBeta, newBS);
 
 					if (timeOver) {
-						System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = "
-								+ (System.nanoTime() - startTime));
-						System.out.flush();
+						//System.out.println("Abort at depth: " + d + " step: " + options.indexOf(m) + " t = "
+						//		+ (System.nanoTime() - startTime));
 						timer.cancel();
 						return new Pair(bestBetaLastDepth, bestMoveLastDepth);
 					}
@@ -339,7 +337,7 @@ public class AlphaBetaPruning {
 		}
 
 		// HEURISTIC 7: Corner escape
-		// TODO
+		// Not implemented yet.
 		
 		/*
 		 * Note: I originally thought that too many heuristics were bad 
@@ -398,8 +396,6 @@ public class AlphaBetaPruning {
 	 
 	/**
 	 * Helper function that returns free rows and columns.
-	 * 
-	 * TODO write it cleaner and shorter. (sadly I ran out of time)
 	 * 
 	 * @param bs
 	 * @return
