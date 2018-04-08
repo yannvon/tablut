@@ -60,7 +60,7 @@ public class AlphaBetaPruning {
 		timer = new Timer();
 		TimerTask timeoutTask = new TimerTask() {
 			public void run() {
-				System.out.println("time over !");
+				//System.out.println("time over !");
 				timeOver = true;
 			}
 		};
