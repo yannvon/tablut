@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
-
 /**
  * 
  * This class implements a Genetic Algorithm called differential evolution.
