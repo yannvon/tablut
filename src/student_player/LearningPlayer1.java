@@ -43,7 +43,7 @@ public class LearningPlayer1 extends TablutPlayer {
 				double[] weights = new double[DifferentialEvolution6D.DIMENSIONALITY];
 				
 				for(int i = 0; i < DifferentialEvolution6D.DIMENSIONALITY; i++){
-					weights[i] = Double.valueOf(numbers.substring(1 + (DifferentialEvolution6D.WEIGHT_SIZE + 1)*i, 1 + (DifferentialEvolution3D.WEIGHT_SIZE + 1)*(i+1)));
+					weights[i] = Double.valueOf(numbers.substring(1 + (DifferentialEvolution6D.WEIGHT_SIZE + 1)*i, 1 + (DifferentialEvolution6D.WEIGHT_SIZE + 1)*(i+1)));
 				}
 				
 				tools = new AlphaBetaPruning(weights);
